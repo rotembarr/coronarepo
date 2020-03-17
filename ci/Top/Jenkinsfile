@@ -1,0 +1,30 @@
+pipeline {
+
+    agent any
+
+    stages {
+        stage('Basic Test') {
+
+            steps {
+                bat "commands.bat"
+            }
+        }
+
+        stage('SubModules') {
+
+            parallel {
+
+                stage('First Module') {
+                    steps {
+                        // Adding the Jenkinsfile of the first module
+                    }
+                }
+                stage('Second Module') {
+                    steps {
+                        // Adding the Jenkinsfile of the second module
+                    }
+                }
+            }
+        }
+    }
+}

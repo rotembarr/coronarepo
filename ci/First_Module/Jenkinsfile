@@ -1,0 +1,21 @@
+pipeline {
+
+    agent any
+
+    stages {
+
+        stage('Basic Test') {
+
+            steps {
+                bat "commands.bat"
+            }
+        }
+
+        stage('Clean WS') {
+
+            steps {
+                bat "rm second_module.exe"
+            }
+        }
+    }
+}
