@@ -9,73 +9,22 @@ pipeline
         {
             steps
             {
-                sh """
-                    chmod +x ./ci/Top/compile.sh
-                    chmod +x ./ci/First_Module/compile.sh
-                    chmod +x ./ci/Second_Module/compile.sh
-                """
+                // Gives Premission To Run sh files
+                sh(script:"chmod +x ./ci/Top/compile.sh", label: "Premission for Top")
             }
         }
         stage("Build")
         {
             steps
             {
-                script
-                {
-                    cmds = [
-                        "Top Module": {
-                            stage("Build top module")
-                            {
-                                sh(script:"./ci/Top/compile.sh", label: "Compiling...")
-                            }
-                        },
-                        "First Module": {
-                            stage("Build first module")
-                            {
-                                sh(script:"./ci/First_Module/compile.sh", label: "Compiling...")
-                            }
-                        },
-                        "Second Module": {
-                            stage("Build second module")
-                            {
-                                sh(script:"./ci/Second_Module/compile.sh", label: "Compiling...")
-                            }
-                         },
-                    ]
-
-                    parallel cmds
-                }
+                sh(script:"./ci/Top/compile.sh", label: "Compiling...")
             }
         }
         stage("Run")
         {
             steps
             {
-                script
-                {
-                    cmds = [
-                        "Top Module" : {
-                            stage("Run top module")
-                            {
-                                sh(script:"./ci/Top/top_module", label: "Running...")
-                            }
-                        },
-                        "First Module" : {
-                            stage("Run first module")
-                            {
-                                sh(script:"./ci/First_Module/first_module", label: "Running...")
-                            }
-                        },
-                        "Second Module" : {
-                            stage("Run second module")
-                            {
-                                sh(script:"./ci/Second_Module/second_module", label: "Running...")
-                            }
-                        }
-                    ]
-                    
-                    parallel cmds
-                }
+                sh(script:"./ci/Top/top_module", label: "Running...")
             }
         }
     }

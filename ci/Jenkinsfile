@@ -1,0 +1,67 @@
+pipeline
+{
+    agent any
+
+    stages
+    {
+
+        stage("Setup Environment")
+        {
+            steps
+            {
+                // Gives Premission To Run sh files
+                sh(script:"chmod +x ./ci/Top/compile.sh", label: "Premission for Top")
+                sh(script:"chmod +x ./ci/First_Module/compile.sh", label: "Premission for First_Module")
+                sh(script:"chmod +x ./ci/Second_Module/compile.sh", label: "Premission for Second_Module")
+            }
+        }
+        stage("Run All Modules")
+        {
+            steps
+            {
+                script
+                {
+                    cmds = [
+                        "Top Module": {
+                            stage("Invoke Pipeline - top module")
+                            {
+                                top_jenkinsfile = "./ci/Top/Jenkinsfile"
+                                //sh(script:"load ./ci/Top/Jenkinsfile", label: "Loads Jenkinsfile of Top")
+                                //build job: '<Top Module>', propagate: true, wait: true
+                            }
+                            load top_jenkinsfile
+                        },
+                        "First Module": {
+                            stage("Invoke Pipeline - first module")
+                            {
+                                first_jenkinsfile = "./ci/First_Module/Jenkinsfile"
+                                //sh(script:"load ./ci/First_Module/Jenkinsfile", label: "Loads Jenkinsfile of First_Module")
+                                //build job: '<Second_Module>', propagate: true, wait: true
+                            }
+                            load first_jenkinsfile
+                        },
+                        "Second Module": {
+                            stage("Invoke Pipeline - second module")
+                            {
+                                second_jenkinsfile = "./ci/Second_Module/Jenkinsfile"
+                                //sh(script:"load ./ci/Second_Module/Jenkinsfile", label: "Loads Jenkinsfile of Second_Module")
+                                //build job: '<Second_Module>', propagate: true, wait: true
+                            }
+                            load second_jenkinsfile
+                         }
+                    ]
+
+                    parallel cmds
+                }
+            }
+        }
+    }
+    post
+    {
+        cleanup
+        {
+            cleanWs()
+            deleteDir() /* clean up our workspace */
+        }
+    }
+}
