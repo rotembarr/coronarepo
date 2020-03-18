@@ -1,3 +1,6 @@
+from time import sleep
+
+
 class Scoreboard:
     def __init__(self):
         self.dut_list = []
@@ -9,8 +12,9 @@ class Scoreboard:
         while True:
 
             # Wait until a msg is received in both lists
-            yield self.dut_list and self.rm_list
+            if self.dut_list and self.rm_list:
 
-            # TODO add implementation
-            pass
+                # TODO add implementation
+                pass
+            sleep(1)
 
