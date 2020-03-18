@@ -21,8 +21,24 @@ class Environment:
 
 
 if __name__ == '__main__':
-    # TODO Handle args pars
-    pass
+    import argparse
+    import random
+
+    parser = argparse.ArgumentParser(description='Simulation of STC')
+    parser.add_argument('-s', '--seed', dest='i_seed', action='store',
+                        help='Set the seed of the simulation.')
+
+    args = parser.parse_args()
+
+    seed = random.randint(1, 2**8 - 1)
+
+    if args.i_seed:
+        seed = args.i_seed
+
+    print("Simulation seed : ", seed)
+
+    random.seed(seed)
+
     env = Environment()
 
 
