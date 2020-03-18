@@ -15,6 +15,8 @@ class Environment:
         self.scoreboard.dut_list = self.dut.out_list
         self.scoreboard.rm_list = self.reference_model.out_list
 
+        self.run()
+
     def run(self):
 
         self.sequence.run(num_of_messages=10)
