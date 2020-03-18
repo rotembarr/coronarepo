@@ -1,3 +1,6 @@
+from time import sleep
+
+
 class DUT:
     def __init__(self, in_list, out_list):
         self.in_list = in_list
@@ -8,7 +11,11 @@ class DUT:
         while True:
 
             # Wait until a msg is received in the input list
-            yield self.in_list
+            if self.in_list:
 
-            # TODO add implementation
-            pass
+                # TODO add implementation
+                pass
+
+            sleep(1)
+
+
