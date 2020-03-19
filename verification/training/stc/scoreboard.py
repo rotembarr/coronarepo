@@ -9,6 +9,9 @@ class Scoreboard:
         self.rm_list = []
         self._msg_compared = 0
 
+        # Starts the Main Function
+        self.run()
+
     def run(self):
 
         # 1 minutes from now
