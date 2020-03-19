@@ -7,6 +7,7 @@ FULL_PERCENTAGE = 100
 
 BUS_WIDTH_IN = 8
 BUS_WIDTH_OUT = 1
+NIBBLE_SIZE = 4
 
 # Payload in bits
 SYNC_0 = {'sync': 'aa', 'payload': 1}
