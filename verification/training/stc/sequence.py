@@ -1,4 +1,5 @@
 import package
+import random
 
 
 class Sequence:
@@ -17,4 +18,9 @@ class Sequence:
         """
             TODO: Generate a msg to be send to the DUT.
         """
-        return 10
+
+        if package.is_true_by_percentage(package.FULL_PERCENTAGE / 5, package.FULL_PERCENTAGE):
+            word = random.choice(package.SYNCS['sync'])
+        else:
+            word = '{:0{}X}'.format(random.getrandbits(package.BUS_WIDTH_IN), package.BUS_WIDTH_IN)
+        return word
