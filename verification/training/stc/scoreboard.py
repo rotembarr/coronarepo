@@ -9,6 +9,12 @@ class Scoreboard:
         self.rm_list = []
         self._msg_compared = 0
 
+    def add_dut_word(self, byte):
+        self.dut_list.append(byte)
+
+    def add_rm_word(self, byte):
+        self.rm_list.append(byte)
+
     def run(self):
 
         # 1 minutes from now
@@ -38,9 +44,10 @@ class Scoreboard:
                 elif time.time() > timeout:
                     raise package.TimeoutOccurred()
 
-            print('##############################################################\n')
-            print('############# The Test Has Finished Successfully #############\n')
-            print('##############################################################\n')
+            if self._msg_compared == package.NUM_OF_MSG:
+                print('##############################################################\n')
+                print('############# The Test Has Finished Successfully #############\n')
+                print('##############################################################\n')
 
         except package.ComparisionFailed:
 
