@@ -8,24 +8,23 @@ class Scoreboard:
     def __init__(self):
         self.dut_list = []
         self.rm_list = []
-        # TODO : Note it compares by bits
+
+        # TODO Note its in bits
         self._msg_compared = 0
 
     def run(self):
 
-
         # 1 minutes from now
         timeout = time.time() + package.MINUTE_IN_SECONDS
-
-        yield (self.dut_list and self.rm_list), timeout
 
         try:
             while True:
 
-                # Wait until a msg is received in both lists, or reached timeout
-                yield len(self.dut_list), timeout
-
+                # Wait until a msg is received in both lists
                 if self.dut_list and self.rm_list:
+
+                    # 1 minutes from now
+                    timeout = time.time() + package.MINUTE_IN_SECONDS
 
                     # Gets the first item from the DUT queue
                     dut_item = self.dut_list.pop(0)
@@ -39,13 +38,12 @@ class Scoreboard:
                     else:
                         raise package.ComparisionFailed()
 
-                else:
-                    # Reached timeout
+                elif time.time() > timeout:
                     raise package.TimeoutOccurred()
 
-            print('##############################################################\n')
-            print('############# The Test Has Finished Successfully #############\n')
-            print('##############################################################\n')
+                print('##############################################################\n')
+                print('############# The Test Has Finished Successfully #############\n')
+                print('##############################################################\n')
 
         except package.ComparisionFailed:
 
@@ -59,13 +57,11 @@ class Scoreboard:
 
             print("\nThe Timeout Reached His Limit\n")
 
-            if not (self.dut_list or self.rm_list):
+            if (not self.dut_list) and not (self.rm_list):
                 print("\nNo messages were sent to both DUT and Reference Model\n")
 
             elif not self.dut_list:
                 print("\nThe DUT Is Missing An Item\n")
 
-
-if __name__ == '__main__':
-    # Add unit-test if possible
-    pass
+            elif not self.rm_list:
+                print("\nThe Reference Model Is Missing An Item\n")

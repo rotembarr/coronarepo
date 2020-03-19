@@ -7,6 +7,7 @@ class Sequence:
         self.rm = rm
 
     def run(self):
+        print("Seq")
         for i in range(NUM_OF_MSG):
             msg = self.gen_msg()
             yield self.driver(msg)
@@ -35,3 +36,4 @@ class Sequence:
         for word in msg:
             self.dut.append_word(word)
             self.rm.append_word(word)
+
