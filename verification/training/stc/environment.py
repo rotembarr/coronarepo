@@ -3,6 +3,7 @@ from dut import DUT
 from reference_model import ReferenceModel
 from scoreboard import Scoreboard
 from myhdl import Simulation
+import threading
 
 """
 To use MyHDL library:
@@ -20,9 +21,13 @@ class Environment:
         self.run_test()
 
     def run_test(self):
-        sim = Simulation(self.sequence.run())
+        x = threading.Thread(target=self.scoreboard.run(), args=(1,))
+        x.start()
+        y = threading.Thread(target=self.sequence.run(), args=(2,))
+        y.start()
+        #sim = Simulation(self.sequence.run())
         print("Started simulation")
-        sim.run(100)
+        #sim.run(100)
         print("Finished simulation")
 
 

@@ -1,6 +1,5 @@
 import package
 import time
-from myhdl import *
 
 
 class Scoreboard:
@@ -8,8 +7,6 @@ class Scoreboard:
     def __init__(self):
         self.dut_list = []
         self.rm_list = []
-
-        # TODO Note its in bits
         self._msg_compared = 0
 
     def run(self):
@@ -18,7 +15,7 @@ class Scoreboard:
         timeout = time.time() + package.MINUTE_IN_SECONDS
 
         try:
-            while True:
+            while self._msg_compared <= package.NUM_OF_MSG - 1:
 
                 # Wait until a msg is received in both lists
                 if self.dut_list and self.rm_list:
@@ -41,9 +38,9 @@ class Scoreboard:
                 elif time.time() > timeout:
                     raise package.TimeoutOccurred()
 
-                print('##############################################################\n')
-                print('############# The Test Has Finished Successfully #############\n')
-                print('##############################################################\n')
+            print('##############################################################\n')
+            print('############# The Test Has Finished Successfully #############\n')
+            print('##############################################################\n')
 
         except package.ComparisionFailed:
 
@@ -65,3 +62,18 @@ class Scoreboard:
 
             elif not self.rm_list:
                 print("\nThe Reference Model Is Missing An Item\n")
+
+
+if __name__ == '__main__':
+    dut_queue = []
+    rm_queue = []
+
+    for x in range(0, package.NUM_OF_MSG):
+        dut_queue.append('oran')
+        rm_queue.append('oran')
+
+    scoreboard = Scoreboard()
+    scoreboard.rm_list = rm_queue
+    scoreboard.dut_list = dut_queue
+
+    scoreboard.run()
