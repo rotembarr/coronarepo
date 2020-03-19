@@ -2,24 +2,28 @@ from sequence import Sequence
 from dut import DUT
 from reference_model import ReferenceModel
 from scoreboard import Scoreboard
+from myhdl import Simulation
+
+"""
+To use MyHDL library:
+Exec the command 'pip install myhdl' on the CLI
+"""
 
 
 class Environment:
     def __init__(self):
-        self.sequence = Sequence()
         self.scoreboard = Scoreboard()
-        self.reference_model = ReferenceModel(self.sequence.rm_list, self.scoreboard.rm_list)
-        self.dut = DUT(self.sequence.dut_list, self.scoreboard.rm_list)
+        self.reference_model = ReferenceModel(self.scoreboard)
+        self.dut = DUT(self.scoreboard)
+        self.sequence = Sequence(self.dut,  self.reference_model)
 
-        # Set Scoreboard lists
-        self.scoreboard.dut_list = self.dut.out_list
-        self.scoreboard.rm_list = self.reference_model.out_list
+        self.run_test()
 
-        self.run()
-
-    def run(self):
-
-        self.sequence.run(num_of_messages=10)
+    def run_test(self):
+        sim = Simulation(self.sequence.run())
+        print("Started simulation")
+        sim.run(100)
+        print("Finished simulation")
 
 
 if __name__ == '__main__':
@@ -32,7 +36,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    seed = random.randint(1, 2**8 - 1)
+    seed = random.randint(1, 2 ** 8 - 1)
 
     if args.i_seed:
         seed = args.i_seed
@@ -42,5 +46,3 @@ if __name__ == '__main__':
     random.seed(seed)
 
     env = Environment()
-
-
