@@ -20,7 +20,7 @@ class Environment:
         self.run_test()
 
     def run_test(self):
-        sim = Simulation(self.sequence.run())
+        sim = Simulation(self.sequence.run(), self.scoreboard.run())
         print("Started simulation")
         sim.run(100)
         print("Finished simulation")

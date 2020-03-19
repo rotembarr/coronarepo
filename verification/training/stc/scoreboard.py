@@ -13,17 +13,17 @@ class Scoreboard:
 
     def run(self):
 
+
         # 1 minutes from now
         timeout = time.time() + package.MINUTE_IN_SECONDS
 
-        try:
-            while self._msg_compared < package.NUM_OF_MSG - 1:
+        yield (self.dut_list and self.rm_list), timeout
 
-                # 1 minutes from now
-                timeout = time.time() + package.MINUTE_IN_SECONDS
+        try:
+            while True:
 
                 # Wait until a msg is received in both lists, or reached timeout
-                yield (self.dut_list and self.rm_list), timeout
+                yield len(self.dut_list), timeout
 
                 if self.dut_list and self.rm_list:
 
