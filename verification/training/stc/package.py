@@ -1,7 +1,7 @@
 import random
 
 NUM_OF_MSG = 3
-
+SYNC_SIZE = 8
 MINUTE_IN_SECONDS = 60
 FULL_PERCENTAGE = 100
 
