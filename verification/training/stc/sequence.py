@@ -17,22 +17,23 @@ class Sequence:
         The function generate each time whole sync,
         Sometimes correct and sometimes wrong.
         """
+        # TODO Dont use FULL_PERCENTAGE plssss
+        # Use probability written in the package
 
         # Generate correct sync
-        if package.is_true_by_percentage(package.FULL_PERCENTAGE / 5):
-            # TODO: generate good sync
-            # Choice random correct sync from the list of all the correct syncs.
+        if package.is_true_by_percentage(package.GEN_GOOD_SYNC_P):
+            # Choose a random correct sync from the list of all the correct syncs.
             sync = random.choice(package.SYNCS)['sync']
 
         # Generate random sync
-        elif package.is_true_by_percentage(package.FULL_PERCENTAGE / 2):
-            # TODO: Need to decide the size of the wrong sync (can be few sizes)
+        elif package.is_true_by_percentage(package.GEN_RAND_SYNC_PROB):
             # Padding the random sync with format of HEX according to TBD size.
-            sync = '{:0{}X}'.format(random.getrandbits(package.SYNC_SIZE), package.SYNC_SIZE // package.NIBBLE_SIZE)
+            rand_sync_size = random.randrange(package.RAND_SYNC_MIN_SIZE, package.RAND_SYNC_MAX_SIZE)
+            sync = '{:0{}X}'.format(random.getrandbits(rand_sync_size), rand_sync_size // package.NIBBLE_SIZE)
 
         # Generate wrong sync (similar to the correct)
         else:
-            # Choice random correct sync from the list of all the correct syncs.
+            # Choose random correct sync from the list of all the correct syncs.
             sync = random.choice(package.SYNCS)['sync']
 
             # Random number that indicate how much nibbles we will change from the original.
@@ -49,10 +50,8 @@ class Sequence:
                 # Choice random nibble to change and deleted from the list so it will not be re-selected.
                 nibble_idx = random.choice(nibbles_idx_list)
                 nibbles_idx_list.remove(nibble_idx)
-                # Change the selected nibble with XOR on 1. TODO not working
-                val = sync[nibble_idx]
-                sync[nibble_idx] = ''
-                sync[nibble_idx] = '{:X}'.format(int(val, 16) ^ 1)
+                # Change the selected nibble with XOR on 1.
+                sync[nibble_idx] = '{:X}'.format(int(sync[nibble_idx], 16) ^ 1)
 
             # Convert sync back to a string
             sync = "".join(sync)

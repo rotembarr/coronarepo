@@ -1,13 +1,20 @@
 import random
 
+# Simulation parameters
 NUM_OF_MSG = 3
-SYNC_SIZE = 8
 MINUTE_IN_SECONDS = 60
 FULL_PERCENTAGE = 100
+NIBBLE_SIZE = 4
 
+# DUT parameters
 BUS_WIDTH_IN = 8
 BUS_WIDTH_OUT = 1
-NIBBLE_SIZE = 4
+
+# Sequence
+GEN_GOOD_SYNC_P = 20
+GEN_RAND_SYNC_PROB = 50
+RAND_SYNC_MIN_SIZE = BUS_WIDTH_IN
+RAND_SYNC_MAX_SIZE = BUS_WIDTH_IN * 3
 
 # Payload in bits
 SYNC_0 = {'sync': 'aa', 'payload': 1}
