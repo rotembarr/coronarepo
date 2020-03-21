@@ -1,18 +1,31 @@
+###########################################################################################
+#     __     __                _    __   _                  _     _                     ###
+#     \ \   / /   ___   _ __  (_)  / _| (_)   ___    __ _  | |_  (_)   ___    _ __      ###
+#      \ \ / /   / _ \ | '__| | | | |_  | |  / __|  / _` | | __| | |  / _ \  | '_ \     ###
+#       \ V /   |  __/ | |    | | |  _| | | | (__  | (_| | | |_  | | | (_) | | | | |    ###
+#        \_/     \___| |_|    |_| |_|   |_|  \___|  \__,_|  \__| |_|  \___/  |_| |_|    ###
+###########################################################################################
+#                                                                                       ###
+# The Sequence randomize input items and sends them to the DUT and RM                   ###
+# Sends every time a byte to the DUT                                                    ###
+# Sends a list of bytes to the RM when finished sending all the bytes to the DUT        ###
+###########################################################################################
+
 import package
 import os
 
 
 class Sequence:
     def __init__(self):
-        self.data_for_rm = []
+        # List of the items which will be sent to the rm
+        self.list_of_bytes = []
 
     def run(self):
-        for i in range(package.NUM_OF_IN_BYTES):
-            print "seq"
+        for i in range(package.NUM_OF_BYTES_TO_SEND):
             # randomize an input
             random_byte = os.urandom(package.BUS_WIDTH_IN)
-            # Adds the input to the rm_queue
-            self.data_for_rm.append(random_byte)
+            # Adds the input to the rm list
+            self.list_of_bytes.append(random_byte)
             # Returns the input but does not stops the execution of the function
             yield random_byte
 

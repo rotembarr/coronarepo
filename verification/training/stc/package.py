@@ -1,10 +1,10 @@
 import random
 
 # Simulation parameters
-NUM_OF_IN_BYTES = 3
-MINUTE_IN_SECONDS = 60
+NUM_OF_BYTES_TO_SEND = 3
 FULL_PERCENTAGE = 100
 NIBBLE_SIZE = 4
+MINUTE_IN_SECONDS = 60
 
 # DUT parameters
 BUS_WIDTH_IN = 8
@@ -16,12 +16,10 @@ GEN_RAND_SYNC_PROB = 50
 RAND_SYNC_MIN_SIZE = BUS_WIDTH_IN
 RAND_SYNC_MAX_SIZE = BUS_WIDTH_IN * 3
 
-# Payload in bits
-SYNC_0 = {'sync': 'aa', 'payload': 1}
-SYNC_1 = {'sync': 'bb', 'payload': 2}
-SYNC_2 = {'sync': 'cc', 'payload': 3}
-SYNC_3 = {'sync': 'dd', 'payload': 4}
-SYNCS = [SYNC_0, SYNC_1, SYNC_2, SYNC_3]
+# Payload in bytes
+# The sync series is in hexadecimal
+SYNC_0 = {'sync': 'AABB0034', 'payload': 55}
+SYNC_1 = {'sync': '34569865543', 'payload': 124}
 
 
 def is_true_by_percentage(percent, max_percent=100, min_percent=1):
