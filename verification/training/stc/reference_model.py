@@ -1,16 +1,29 @@
+###########################################################################################
+#     __     __                _    __   _                  _     _                     ###
+#     \ \   / /   ___   _ __  (_)  / _| (_)   ___    __ _  | |_  (_)   ___    _ __      ###
+#      \ \ / /   / _ \ | '__| | | | |_  | |  / __|  / _` | | __| | |  / _ \  | '_ \     ###
+#       \ V /   |  __/ | |    | | |  _| | | | (__  | (_| | | |_  | | | (_) | | | | |    ###
+#        \_/     \___| |_|    |_| |_|   |_|  \___|  \__,_|  \__| |_|  \___/  |_| |_|    ###
+###########################################################################################
+#                                                                                       ###
+# Searchs for a synchronization and if found it outputs some number of bytes            ###
+# Input - List of byte                                                                  ###
+# Output - List of byte                                                                 ###
+###########################################################################################
+
+
 class ReferenceModel:
-    def __init__(self, scoreboard):
-        self.scoreboard = scoreboard
+    def __init__(self, sequence):
+        self.sequence = sequence
         self.in_list = []
 
     def logic(self):
-        """
-            TODO: All the logic of the Reference Model should be in the for loop
-        """
-        for x in self.in_list:
-            self.scoreboard.add_rm_word(x)
+        # Gets the data from the sequence
+        self.in_list = self.sequence.list_of_bytes
 
-        # Gets a word from the sequence
+        """
+                TODO: All the logic of the Reference Model should be here
+        """
 
-    def append_word(self, word):
-        self.in_list.append(word)
+        # Sends the output to the scoreboard but does not stops the execution of the function
+        yield self.in_list

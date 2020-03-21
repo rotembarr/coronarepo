@@ -1,15 +1,28 @@
+###########################################################################################
+#     __     __                _    __   _                  _     _                     ###
+#     \ \   / /   ___   _ __  (_)  / _| (_)   ___    __ _  | |_  (_)   ___    _ __      ###
+#      \ \ / /   / _ \ | '__| | | | |_  | |  / __|  / _` | | __| | |  / _ \  | '_ \     ###
+#       \ V /   |  __/ | |    | | |  _| | | | (__  | (_| | | |_  | | | (_) | | | | |    ###
+#        \_/     \___| |_|    |_| |_|   |_|  \___|  \__,_|  \__| |_|  \___/  |_| |_|    ###
+###########################################################################################
+#                                                                                       ###
+# DUT - device under test                                                               ###
+# Searchs for a synchronization series and outputs a byte every time                    ###
+# Input - Byte                                                                          ###
+# Output - Byte                                                                         ###
+###########################################################################################
+
+
 class DUT:
-    def __init__(self, scoreboard):
-        self.scoreboard = scoreboard
-        self.in_list = []
+    def __init__(self, sequence):
+        self.sequence = sequence
 
     def logic(self):
-        """
-            TODO: All the logic of the DUT should be in the for loop
-        """
-        for x in self.in_list:
-            self.scoreboard.add_dut_word(x)
+        # For every value that have been sent from the sequence
+        for value in self.sequence.run():
+            """
+                TODO: All the logic of the DUT should be here
+            """
 
-    # Gets a word from the sequence
-    def append_word(self, word):
-        self.in_list.append(word)
+            # Sends the output to the scoreboard but does not stops the execution of the function
+            yield value
