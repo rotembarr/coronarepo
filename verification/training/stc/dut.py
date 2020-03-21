@@ -1,15 +1,16 @@
 class DUT:
-    def __init__(self, scoreboard):
-        self.scoreboard = scoreboard
+    def __init__(self, sequence):
+        self.sequence = sequence
         self.in_list = []
 
     def logic(self):
-        """
-            TODO: All the logic of the DUT should be in the for loop
-        """
-        for x in self.in_list:
-            self.scoreboard.add_dut_word(x)
+        # For every value that have been sent from the sequence
+        for value in self.sequence.run():
+            print "dut"
+            print value
+            """
+                TODO: All the logic of the DUT should be here
+            """
 
-    # Gets a word from the sequence
-    def append_word(self, word):
-        self.in_list.append(word)
+            # Sends the output tp the scoreboard
+            yield value

@@ -1,16 +1,19 @@
 class ReferenceModel:
-    def __init__(self, scoreboard):
-        self.scoreboard = scoreboard
+    def __init__(self, sequence):
+        self.sequence = sequence
         self.in_list = []
 
     def logic(self):
-        """
-            TODO: All the logic of the Reference Model should be in the for loop
-        """
-        for x in self.in_list:
-            self.scoreboard.add_rm_word(x)
 
-        # Gets a word from the sequence
+        # Gets the data from the sequence
+        self.in_list = self.sequence.data_for_rm
 
-    def append_word(self, word):
-        self.in_list.append(word)
+        for value in self.in_list:
+            print "rm"
+            print value
+
+        """
+                TODO: All the logic of the Reference Model should be here
+        """
+        # Sends the the output to the scoreboard
+        yield self.in_list
