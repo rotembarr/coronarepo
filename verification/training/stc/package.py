@@ -1,14 +1,14 @@
 import random
 
 # Simulation parameters
-NUM_OF_MSG = 3
+NUM_OF_IN_BYTES = 3
 MINUTE_IN_SECONDS = 60
 FULL_PERCENTAGE = 100
 NIBBLE_SIZE = 4
 
 # DUT parameters
 BUS_WIDTH_IN = 8
-BUS_WIDTH_OUT = 1
+BUS_WIDTH_OUT = 8
 
 # Sequence
 GEN_GOOD_SYNC_P = 20

@@ -4,16 +4,23 @@ import time
 
 class Scoreboard:
 
-    def __init__(self):
+    def __init__(self, dut, rm):
+        self.dut = dut
+        self.rm = rm
         self.dut_list = []
         self.rm_list = []
         self._msg_compared = 0
 
-    def add_dut_word(self, byte):
-        self.dut_list.append(byte)
+        self.get_dut_output()
+        self.get_rm_output()
 
-    def add_rm_word(self, byte):
-        self.rm_list.append(byte)
+    def get_dut_output(self):
+        for value in self.dut.logic():
+            self.dut_list.append(value)
+
+    def get_rm_output(self):
+        for value in self.rm.logic():
+            self.rm_list += value
 
     def run(self):
 
@@ -21,7 +28,7 @@ class Scoreboard:
         timeout = time.time() + package.MINUTE_IN_SECONDS
 
         try:
-            while self._msg_compared <= package.NUM_OF_MSG - 1:
+            while True:
 
                 # Wait until a msg is received in both lists
                 if self.dut_list and self.rm_list:
@@ -43,11 +50,11 @@ class Scoreboard:
 
                 elif time.time() > timeout:
                     raise package.TimeoutOccurred()
-
-            if self._msg_compared == package.NUM_OF_MSG:
-                print('##############################################################\n')
-                print('############# The Test Has Finished Successfully #############\n')
-                print('##############################################################\n')
+                else:
+                    print('##############################################################\n')
+                    print('############# The Test Has Finished Successfully #############\n')
+                    print('##############################################################\n')
+                    break
 
         except package.ComparisionFailed:
 
@@ -75,7 +82,7 @@ if __name__ == '__main__':
     dut_queue = []
     rm_queue = []
 
-    for x in range(0, package.NUM_OF_MSG):
+    for x in range(0, package.NUM_OF_IN_BYTES):
         dut_queue.append('oran')
         rm_queue.append('oran')
 

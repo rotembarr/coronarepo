@@ -2,24 +2,21 @@ from sequence import Sequence
 from dut import DUT
 from reference_model import ReferenceModel
 from scoreboard import Scoreboard
-from threading import Thread
+
 
 class Environment:
     def __init__(self):
-        self.scoreboard = Scoreboard()
-        self.reference_model = ReferenceModel(self.scoreboard)
-        self.dut = DUT(self.scoreboard)
-        self.sequence = Sequence(self.dut,  self.reference_model)
+        self.sequence = Sequence()
+        self.dut = DUT(self.sequence)
+        self.reference_model = ReferenceModel(self.sequence)
+        self.scoreboard = Scoreboard(self.dut, self.reference_model)
 
         self.run_test()
 
     def run_test(self):
 
         print("Started simulation")
-        Thread(target=self.sequence.run()).start()
-        Thread(target=self.dut.logic()).start()
-        Thread(target=self.reference_model.logic()).start()
-        Thread(target= self.scoreboard.run()).start()
+        self.scoreboard.run()
         print("Finished simulation")
 
 
