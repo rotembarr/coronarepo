@@ -18,10 +18,6 @@ from scoreboard import Scoreboard
 
 class Environment:
     def __init__(self):
-        # self.sequence = Sequence()
-        # self.reference_model = ReferenceModel(self.sequence)
-        # self.dut = DUT(self.sequence)
-        # self.scoreboard = Scoreboard(self.dut, self.reference_model)
         self.scoreboard = Scoreboard()
         self.reference_model = ReferenceModel(self.scoreboard)
         self.dut = DUT(self.scoreboard)

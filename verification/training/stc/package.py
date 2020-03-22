@@ -1,14 +1,11 @@
 import random
 
 # Simulation parameters
-NUM_OF_BYTES_TO_SEND = 300
+NUM_OF_BYTES_TO_SEND = 3000
 FULL_PERCENTAGE = 100
-NIBBLE_SIZE = 4
-# MINUTE_IN_SECONDS = 60
 
 # DUT parameters
-BUS_WIDTH_IN = 8
-BUS_WIDTH_OUT = 8
+BUS_WIDTH_IN = 1
 
 # Sequence
 GEN_GOOD_SYNC_P = 20
@@ -18,9 +15,10 @@ RAND_SYNC_MAX_SIZE = BUS_WIDTH_IN * 3
 
 # Payload in bytes
 # The sync series is in hexadecimal
-SYNC_0 = {'sync': 'AABB0034', 'payload': 55}
-SYNC_1 = {'sync': '34569865543', 'payload': 124}
-
+PARAM_SYNC = {'sync': 'a', 'payload': 10}
+SYNCS = [{'sync': 'AABB0034', 'payload': 55}, 
+         {'sync': '34569865543', 'payload': 124},
+         PARAM_SYNC]
 
 def is_true_by_percentage(percent, max_percent=100, min_percent=1):
     """
