@@ -37,9 +37,10 @@ class ReferenceModel:
             if self.sync_payload_size > 0:
                 self.scoreboard.write_byte_rm(word)
                 self.sync_payload_size -= 1
-            else:
-                self.found_sync = 0
 
+                if self.sync_payload_size == 0:
+                    self.found_sync = 0
+                    
     def find_sync(self, word):
         for sync in self.syncs:        
             if sync['sync'][sync['curr_idx']] == word:
@@ -51,7 +52,6 @@ class ReferenceModel:
                 self.found_sync = 1
                 self.sync_payload_size = sync['payload']
                 print('sync occ----------------------------------------------------------------------')
-                print(sync['sync'])
                 self.reset_syncs()
 
     def reset_syncs(self):
