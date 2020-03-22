@@ -1,10 +1,10 @@
 import random
 
 # Simulation parameters
-NUM_OF_BYTES_TO_SEND = 3
+NUM_OF_BYTES_TO_SEND = 300
 FULL_PERCENTAGE = 100
 NIBBLE_SIZE = 4
-MINUTE_IN_SECONDS = 60
+# MINUTE_IN_SECONDS = 60
 
 # DUT parameters
 BUS_WIDTH_IN = 8

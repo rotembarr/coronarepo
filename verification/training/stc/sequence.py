@@ -16,18 +16,22 @@ import os
 
 
 class Sequence:
-    def __init__(self):
+    def __init__(self, reference_model, dut):
         # List of the items which will be sent to the rm
         self.list_of_bytes = []
+        self.rm = reference_model
+        self.dut = dut
 
     def run(self):
-        for i in range(package.NUM_OF_BYTES_TO_SEND):
+        for byte_num in range(package.NUM_OF_BYTES_TO_SEND):
             # randomize an input
             random_byte = os.urandom(package.BUS_WIDTH_IN)
             # Adds the input to the rm list
-            self.list_of_bytes.append(random_byte)
+            self.rm.write_byte(random_byte)
+            self.dut.write_byte(random_byte)
+            # self.list_of_bytes.append(random_byte)
             # Returns the input but does not stops the execution of the function
-            yield random_byte
+            # yield random_byte
 
 
 # def gen_sync():

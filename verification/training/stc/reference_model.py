@@ -13,17 +13,21 @@
 
 
 class ReferenceModel:
-    def __init__(self, sequence):
-        self.sequence = sequence
+    def __init__(self, scoreboard):
         self.in_list = []
+        self.scoreboard = scoreboard 
+
+    def write_byte(self, word):
+        self.in_list.append(word)
+        self.scoreboard.write_byte_rm(word)
 
     def logic(self):
         # Gets the data from the sequence
-        self.in_list = self.sequence.list_of_bytes
+        # self.in_list = self.sequence.list_of_bytes
 
         """
-                TODO: All the logic of the Reference Model should be here
+        TODO: All the logic of the Reference Model should be here
         """
 
         # Sends the output to the scoreboard but does not stops the execution of the function
-        yield self.in_list
+        # yield self.in_list

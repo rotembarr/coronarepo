@@ -12,17 +12,25 @@
 # Output - Byte                                                                         ###
 ###########################################################################################
 
+import time
 
 class DUT:
-    def __init__(self, sequence):
-        self.sequence = sequence
+    def __init__(self, scoreboard):
+        self.in_list = []
+        self.scoreboard = scoreboard 
+
+    def write_byte(self, word):
+        self.in_list.append(word)
+
+        time.sleep(0.01)
+        self.scoreboard.write_byte_dut(word)
 
     def logic(self):
         # For every value that have been sent from the sequence
-        for value in self.sequence.run():
-            """
-                TODO: All the logic of the DUT should be here
-            """
+        # for value in self.sequence.run():
+            # """
+                # TODO: All the logic of the DUT should be here
+            # """
 
             # Sends the output to the scoreboard but does not stops the execution of the function
-            yield value
+        yield '1'

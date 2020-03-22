@@ -18,15 +18,20 @@ from scoreboard import Scoreboard
 
 class Environment:
     def __init__(self):
-        self.sequence = Sequence()
-        self.dut = DUT(self.sequence)
-        self.reference_model = ReferenceModel(self.sequence)
-        self.scoreboard = Scoreboard(self.dut, self.reference_model)
+        # self.sequence = Sequence()
+        # self.reference_model = ReferenceModel(self.sequence)
+        # self.dut = DUT(self.sequence)
+        # self.scoreboard = Scoreboard(self.dut, self.reference_model)
+        self.scoreboard = Scoreboard()
+        self.reference_model = ReferenceModel(self.scoreboard)
+        self.dut = DUT(self.scoreboard)
+        self.sequence = Sequence(self.reference_model, self.dut)
 
         self.run_test()
 
     def run_test(self):
-        self.scoreboard.run()
+        self.sequence.run()
+        self.scoreboard.final_check()
 
 
 if __name__ == '__main__':

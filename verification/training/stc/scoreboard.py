@@ -16,61 +16,39 @@ import time
 
 class Scoreboard:
 
-    def __init__(self, dut, rm):
-        self.dut = dut
-        self.rm = rm
+    def __init__(self):
         self.dut_output_list = []
         self.rm_output_list = []
         # The number of msgs which compared
         self._msg_compared = 0
 
-        self.get_dut_output()
-        self.get_rm_output()
+        # self.get_dut_output()
+        # self.get_rm_output()
 
-    # Gets the output from the dut
-    def get_dut_output(self):
-        for value in self.dut.logic():
-            self.dut_output_list.append(value)
+    def write_byte_dut(self, word):
+        self.dut_output_list.append(word)
+        self.compare()
 
-    # Gets the output from the rm
-    def get_rm_output(self):
-        for value in self.rm.logic():
-            self.rm_output_list += value
+    def write_byte_rm(self, word):
+        self.rm_output_list.append(word)
+        self.compare()
 
-    def run(self):
-
-        # Sets the timeout to 1 minutes from now
-        timeout = time.time() + package.MINUTE_IN_SECONDS
-
+    def compare(self):
         try:
-            while True:
+            if self.dut_output_list and self.rm_output_list:
 
-                # Wait until an item is received in both lists
-                if self.dut_output_list and self.rm_output_list:
+                # Gets the first DUT item
+                dut_item = self.dut_output_list.pop(0)
 
-                    # Sets the timeout to 1 minutes from now
-                    timeout = time.time() + package.MINUTE_IN_SECONDS
+                # Gets the first RM item
+                rm_item = self.rm_output_list.pop(0)
 
-                    # Gets the first DUT item
-                    dut_item = self.dut_output_list.pop(0)
-
-                    # Gets the first RM item
-                    rm_item = self.rm_output_list.pop(0)
-
-                    if dut_item == rm_item:
-                        # Updates the counter
-                        self._msg_compared += 1
-                        print('\n############# Item No.{} Has Compared Successfully #############\n'.format(self._msg_compared))
-                    else:
-                        raise package.ComparisionFailed()
-
-                elif time.time() > timeout:
-                    raise package.TimeoutOccurred()
+                if dut_item == rm_item:
+                    # Updates the counter
+                    self._msg_compared += 1
+                    print('\n############# Item No.{} Has Compared Successfully #############\n'.format(self._msg_compared))
                 else:
-                    print('##############################################################\n')
-                    print('############# The Test Has Finished Successfully #############\n')
-                    print('##############################################################\n')
-                    break
+                    raise package.ComparisionFailed()
 
         except package.ComparisionFailed:
 
@@ -80,15 +58,8 @@ class Scoreboard:
             print('\n############# REFERENCE MODEL ITEM #############\n')
             print(rm_item)
 
-        except package.TimeoutOccurred:
-
-            print("\nThe Timeout Reached His Limit\n")
-
-            if (not self.dut_output_list) and not (self.rm_output_list):
-                print("\nNo messages were sent to both DUT and Reference Model\n")
-
-            elif not self.dut_output_list:
-                print("\nThe DUT Is Missing An Item\n")
-
-            elif not self.rm_output_list:
-                print("\nThe Reference Model Is Missing An Item\n")
+    def final_check(self):
+        print('final check')
+        print('##############################################################\n')
+        print('############# The Test Has Finished Successfully #############\n')
+        print('##############################################################\n')
