@@ -16,85 +16,71 @@ import os
 import random
 import string
 
+
 class Sequence:
     def __init__(self, reference_model, dut):
         self.rm = reference_model
         self.dut = dut
+        self.syncs_idx = [{package.SYNCS[0]['sync']: 0},
+                          {package.SYNCS[1]['sync']: 0},
+                          {package.SYNCS[2]['sync']: 0}]
 
     def run(self):
+
+        rand_choices = random.choices(
+            # Contains all the syncs and a specific value that displays whether to send random information
+            population=[package.SYNCS[0], package.SYNCS[1], package.SYNCS[2], package.RAND_VALUE],
+            # The weight for every element
+            weights=[package.RAND_BYTE_IN_SYNC_0_W, package.RAND_BYTE_IN_SYNC_1_W, package.RAND_BYTE_IN_SYNC_PARAM_W,
+                     package.RAND_BYTE_W],
+            # The size of the returned list
+            k=package.NUM_OF_BYTES_TO_SEND
+        )
+
         for byte_num in range(package.NUM_OF_BYTES_TO_SEND):
 
-            """
-            Your Code Here!
-            """
-            # randomize an input
-            random_byte = random.choice(string.ascii_letters)
-            # random_byte = os.urandom(package.BUS_WIDTH_IN)
-            self.drive_byte(random_byte)
+            # Picks random element from the list
+            rand_choice = random.choice(rand_choices)
 
+            if rand_choice == package.RAND_VALUE:
+                # Randomize a single byte
+                random_byte = random.choice(string.ascii_letters)
+                self.drive_byte(random_byte)
+                self.reset_all_idx()
+            else:
+                # The sync which was chosen
+                sync = rand_choice['sync']
+                # Gets the current index of the sync from the list of dict
+                curr_idx_of_byte_in_sync = next(item[sync] for item in self.syncs_idx if sync in item)
+
+                # Checks if the current index is the last char of the sync
+                if curr_idx_of_byte_in_sync == len(sync) - 1:
+
+                    random_byte = sync[curr_idx_of_byte_in_sync]
+                    self.drive_byte(random_byte)
+                    self.set_index_of_sync(sync, 0)
+                    self.drive_payload(rand_choice['payload'])
+
+                else:
+                    random_byte = sync[curr_idx_of_byte_in_sync]
+                    self.drive_byte(random_byte)
+                    self.set_index_of_sync(sync, curr_idx_of_byte_in_sync + 1)
+
+    # Drives given byte to the RM and DUT
     def drive_byte(self, random_byte):
         self.rm.write_byte(random_byte)
         self.dut.write_byte(random_byte)
 
-# def gen_sync():
-#     """
-#     The function generate each time whole sync,
-#     Sometimes correct and sometimes wrong.
-#     """
-#     # TODO Dont use FULL_PERCENTAGE plssss
-#     # Use probability written in the package
-#
-#     # Generate correct sync
-#     if package.is_true_by_percentage(package.GEN_GOOD_SYNC_P):
-#         # Choose a random correct sync from the list of all the correct syncs.
-#         sync = random.choice(package.SYNCS)['sync']
-#
-#     # Generate random sync
-#     elif package.is_true_by_percentage(package.GEN_RAND_SYNC_PROB):
-#         # Padding the random sync with format of HEX according to TBD size.
-#         rand_sync_size = random.randrange(package.RAND_SYNC_MIN_SIZE, package.RAND_SYNC_MAX_SIZE)
-#         sync = '{:0{}X}'.format(random.getrandbits(rand_sync_size), rand_sync_size // package.NIBBLE_SIZE)
-#
-#     # Generate wrong sync (similar to the correct)
-#     else:
-#         # Choose random correct sync from the list of all the correct syncs.
-#         sync = random.choice(package.SYNCS)['sync']
-#
-#         # Random number that indicate how much nibbles we will change from the original.
-#         num_of_nibble_to_change = random.randrange(1, len(sync))
-#
-#         # List with all the index of the nibbles in the current sync.
-#         nibbles_idx_list = [idx for idx in range(len(sync))]
-#
-#         # Convert sync to a list of nibbles
-#         sync = [char for char in sync]
-#
-#         # Change nibbles
-#         for idx in range(num_of_nibble_to_change):
-#             # Choice random nibble to change and deleted from the list so it will not be re-selected.
-#             nibble_idx = random.choice(nibbles_idx_list)
-#             nibbles_idx_list.remove(nibble_idx)
-#             # Change the selected nibble with XOR on 1.
-#             sync[nibble_idx] = '{:X}'.format(int(sync[nibble_idx], 16) ^ 1)
-#
-#         # Convert sync back to a string
-#         sync = "".join(sync)
-#
-#     # Sent the sync to DUT and RM.
-#     sent_sync_by_words(sync)
-#
-#
-# def sent_sync_by_words(sync):
-#     """
-#     Received all the sync in str and insert to list according words.
-#     :param sync: The sync that we need sent to DUT and RM.
-#     :return: None, added to lists the sync.
-#     """
-#     word_size = package.BUS_WIDTH_IN // package.NIBBLE_SIZE
-#     # Cut the sync_str to list of words
-#     sync_by_words = [sync[idx:idx + word_size] for idx in range(0, len(sync), word_size)]
-#
-#     # Run on all the words in the list(sync) and append to dut and rm lists.
-#     for word in sync_by_words:
-#         self.dut.append_word(word)
-#         self.rm.append_word(word)
+    def set_index_of_sync(self, sync, idx):
+        for item in self.syncs_idx:
+            if sync in item:
+                item[sync] = idx
+
+    def drive_payload(self,payload):
+        for i in range(payload):
+            self.drive_byte(random.choice(string.ascii_letters))
+
+    def reset_all_idx(self):
+        for dict in self.syncs_idx:
+            for value in dict:
+                dict[value] = 0

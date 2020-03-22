@@ -16,11 +16,12 @@ from reference_model import ReferenceModel
 from scoreboard import Scoreboard
 import package
 
+
 class Environment:
     def __init__(self):
         self.scoreboard = Scoreboard()
         self.reference_model = ReferenceModel(self.scoreboard)
-        self.dut = DUT(self.scoreboard, package.SYNCS[-1]['sync'],package.SYNCS[-1]['payload'])
+        self.dut = DUT(self.scoreboard, package.PARAM_SYNC['sync'], package.PARAM_SYNC['payload'])
         self.sequence = Sequence(self.reference_model, self.dut)
 
         self.run_test()

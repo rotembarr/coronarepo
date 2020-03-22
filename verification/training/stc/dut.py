@@ -14,6 +14,7 @@
 
 import time
 
+
 class DUT:
     def __init__(self, scoreboard, sync = 'a', payload = 10):
         self.scoreboard = scoreboard
@@ -38,12 +39,12 @@ class DUT:
             if self.sync_payload_size > 0:
                 self.scoreboard.write_byte_dut(word)
                 self.sync_payload_size -= 1
-
+                
                 if self.sync_payload_size == 0:
                     self.found_sync = 0
-                
+
     def find_sync(self, word):
-        for sync in self.syncs:        
+        for sync in self.syncs:
             if sync['sync'][sync['curr_idx']] == word:
                 sync['curr_idx'] += 1
             else:
@@ -56,5 +57,5 @@ class DUT:
                 self.reset_syncs()
 
     def reset_syncs(self):
-        for sync in self.syncs:        
+        for sync in self.syncs:
             sync['curr_idx'] = 0
