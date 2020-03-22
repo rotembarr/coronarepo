@@ -11,6 +11,7 @@
 
 
 import package
+import sys
 import time
 
 
@@ -57,6 +58,7 @@ class Scoreboard:
             print(dut_item)
             print('\n############# REFERENCE MODEL ITEM #############\n')
             print(rm_item)
+            sys.exit("Comparision Failed")
 
     def final_check(self):
         if self.dut_output_list or self.rm_output_list:
