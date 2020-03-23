@@ -21,9 +21,9 @@ class Sequence:
     def __init__(self, reference_model, dut):
         self.rm = reference_model
         self.dut = dut
-        self.syncs_idx = [{package.SYNCS[0]['sync']: 0},
-                          {package.SYNCS[1]['sync']: 0},
-                          {package.SYNCS[2]['sync']: 0}]
+        self.syncs_idx = [{'sync': package.SYNCS[0]['sync'], 'idx': 0},
+                          {'sync': package.SYNCS[1]['sync'], 'idx': 0},
+                          {'sync': package.SYNCS[2]['sync'], 'idx': 0}]
 
     def run(self):
 
@@ -44,14 +44,15 @@ class Sequence:
 
             if rand_choice == package.RAND_VALUE:
                 # Randomize a single byte
-                random_byte = random.choice(string.ascii_letters)
+                # random_byte = random.choice(string.ascii_letters)
+                random_byte = '{:02x}'.format(random.getrandbits(8))
                 self.drive_byte(random_byte)
                 self.reset_all_idx()
             else:
                 # The sync which was chosen
                 sync = rand_choice['sync']
                 # Gets the current index of the sync from the list of dict
-                curr_idx_of_byte_in_sync = next(item[sync] for item in self.syncs_idx if sync in item)
+                curr_idx_of_byte_in_sync = next(item['idx'] for item in self.syncs_idx if sync == item['sync'])
 
                 # Checks if the current index is the last char of the sync
                 if curr_idx_of_byte_in_sync == len(sync) - 1:
@@ -73,14 +74,13 @@ class Sequence:
 
     def set_index_of_sync(self, sync, idx):
         for item in self.syncs_idx:
-            if sync in item:
-                item[sync] = idx
+            if sync == item['sync']:
+                item['idx'] = idx
 
-    def drive_payload(self,payload):
+    def drive_payload(self, payload):
         for i in range(payload):
-            self.drive_byte(random.choice(string.ascii_letters))
+            self.drive_byte('{:02x}'.format(random.getrandbits(8)))
 
     def reset_all_idx(self):
-        for dict in self.syncs_idx:
-            for value in dict:
-                dict[value] = 0
+        for item in self.syncs_idx:
+            item['idx'] = 0
