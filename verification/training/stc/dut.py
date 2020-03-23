@@ -16,7 +16,8 @@ import time
 
 
 class DUT:
-    def __init__(self, scoreboard, sync='00', payload=10):
+
+    def __init__(self, scoreboard, sync='0a', payload=10):
         self.scoreboard = scoreboard
 
         self.syncs = [{'sync': ['AA', 'BB', '00', '34'], 'payload': 55, 'curr_idx': 0, 'final_idx': len(['AA', 'BB', '00', '34'], )},
