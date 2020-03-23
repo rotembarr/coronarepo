@@ -12,7 +12,6 @@
 
 import package
 import sys
-import time
 
 
 class Scoreboard:
@@ -22,9 +21,6 @@ class Scoreboard:
         self.rm_output_list = []
         # The number of msgs which compared
         self._msg_compared = 0
-
-        # self.get_dut_output()
-        # self.get_rm_output()
 
     def write_byte_dut(self, word):
         self.dut_output_list.append(word)
