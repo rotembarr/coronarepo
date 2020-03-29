@@ -1,9 +1,3 @@
-pipeline
-{
-    agent any
-
-    stages
-    {
 
         stage("Setup Environment")
         {
@@ -27,5 +21,3 @@ pipeline
                 sh(script:"./ci/First_Module/first_module", label: "Running...")
             }
         }
-    }
-}
