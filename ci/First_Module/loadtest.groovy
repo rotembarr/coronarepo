@@ -10,30 +10,22 @@ pipeline
             steps
             {
                 // Gives Premission To Run sh files
-                sh(script:"chmod +x ./ci/Top/compile.sh", label: "Premission for Top")
+                sh(script:"chmod +x ./ci/First_Module/compile.sh", label: "Premission for First_Module")
             }
         }
         stage("Build")
         {
             steps
             {
-                sh(script:"./ci/Top/compile.sh", label: "Compiling...")
+                sh(script:"./ci/First_Module/compile.sh", label: "Compiling...")
             }
         }
         stage("Run")
         {
             steps
             {
-                sh(script:"./ci/Top/top_module", label: "Running...")
+                sh(script:"./ci/First_Module/first_module", label: "Running...")
             }
-        }
-    }
-    post
-    {
-        cleanup
-        {
-            cleanWs()
-            deleteDir() /* clean up our workspace */
         }
     }
 }

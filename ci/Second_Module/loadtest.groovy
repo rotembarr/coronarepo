@@ -28,12 +28,4 @@ pipeline
             }
         }
     }
-    post
-    {
-        cleanup
-        {
-            cleanWs()
-            deleteDir() /* clean up our workspace */
-        }
-    }
 }

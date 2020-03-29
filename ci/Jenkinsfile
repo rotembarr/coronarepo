@@ -23,31 +23,33 @@ pipeline
                 {
                     cmds = [
                         "Top Module": {
-                            stage("Invoke Pipeline - top module")
+                            stage("top module")
                             {
-                                top_jenkinsfile = "./ci/Top/Jenkinsfile"
+                                top_jenkinsfile = "./ci/Top/loadtest.groovy"
+                                load top_jenkinsfile
                                 //sh(script:"load ./ci/Top/Jenkinsfile", label: "Loads Jenkinsfile of Top")
                                 //build job: '<Top Module>', propagate: true, wait: true
                             }
-                            load top_jenkinsfile
                         },
                         "First Module": {
-                            stage("Invoke Pipeline - first module")
+                            stage("first module")
                             {
-                                first_jenkinsfile = "./ci/First_Module/Jenkinsfile"
+
+                                first_jenkinsfile = "./ci/First_Module/loadtest.groovy"
+                                load first_jenkinsfile
+
                                 //sh(script:"load ./ci/First_Module/Jenkinsfile", label: "Loads Jenkinsfile of First_Module")
                                 //build job: '<Second_Module>', propagate: true, wait: true
                             }
-                            load first_jenkinsfile
                         },
                         "Second Module": {
-                            stage("Invoke Pipeline - second module")
+                            stage("second module")
                             {
-                                second_jenkinsfile = "./ci/Second_Module/Jenkinsfile"
+                                second_jenkinsfile = "./ci/Second_Module/loadtest.groovy"
+                                load second_jenkinsfile
                                 //sh(script:"load ./ci/Second_Module/Jenkinsfile", label: "Loads Jenkinsfile of Second_Module")
                                 //build job: '<Second_Module>', propagate: true, wait: true
                             }
-                            load second_jenkinsfile
                          }
                     ]
 
