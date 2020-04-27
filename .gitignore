@@ -1,2 +1,4 @@
 .idea
 *.pyc
+*.qsys_edit
+*/qsys/*/
