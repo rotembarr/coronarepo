@@ -8,7 +8,7 @@ module registers_controller
 	parameter int ADDR_BASE 	= 'h400, // As the addresses are decided by qsys, this parameter should be tested
 	parameter int ADDR_STEP 	= 'h2,
 	parameter int COUNTER_SIZE 	= 32,
-	parameter int DATA_WIDTH	= 32,
+	parameter int DATA_WIDTH	= 32
 	// Still unsure how much latency is expected
 		// How long the read should be valid
 		//parameter int RESPONSE_COUNTER_WIDTH = 3

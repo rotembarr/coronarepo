@@ -6,7 +6,7 @@ module registers_controller_tb ();
 	logic clk;
 	logic rst_n;
 	logic msg_enter;
-	avalon_mm_if reg_mm(.clk(clk));
+	avalon_mm_if reg_mm();
 
 	registers_controller #(
 		.ADDR_BASE(0)
@@ -19,8 +19,8 @@ module registers_controller_tb ();
 
 	initial begin
 		clk = 1'b0;
-		always begin
-			#CLK_FREQ clk ~= clk;
+		forever begin
+			#CLK_FREQ clk = ~clk;
 		end
 	end
 
