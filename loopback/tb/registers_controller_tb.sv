@@ -32,7 +32,34 @@ module registers_controller_tb ();
 		#RST_LEN;
 		@(posedge clk);
 		rst_n = 1'b1;
-		#20000ns;
+		@(posedge clk);
+		// Start debug reg
+		reg_mm.address = 'h2;
+		reg_mm.write = 1'b1;
+		reg_mm.writedata = 'hdeadbeef;
+		@(posedge clk);
+		reg_mm.writedata = 'b0;
+		reg_mm.write = 1'b0;
+		@(posedge clk);
+		reg_mm.read = 1'b1;
+		@(posedge clk);
+		reg_mm.read = 1'b0;
+		// End debug reg
+		// Start counter reg
+		@(posedge clk);
+		reg_mm.address = 'h0;
+		reg_mm.read = 1'b1;
+		@(posedge clk);
+		reg_mm.read = 1'b0;
+		msg_enter = 1;
+		for (int i = 0; i < 10; i++) begin
+			@(posedge clk); // Wait 10 clocks for the counter to raise
+		end
+		reg_mm.read = 1'b1;
+		@(posedge clk);
+		reg_mm.read = 1'b0;
+		// End counter reg
+		#1000ns;
 		$finish();
 	end
 
