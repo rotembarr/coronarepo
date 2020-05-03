@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 #define BUFF_LEN 1024 // Max length of buffer
-#define IP_LEN   16   // Max length of ip
+#define IP_LEN   20   // Max length of ip
 
 int valid_ip (char *str) {
     int segs = 0;    // Segment count
@@ -13,7 +13,7 @@ int valid_ip (char *str) {
         return 0;
 
     // Process every character in string
-    while (*str != '\0') {
+    while (*str != '\n' && *str != '\0') {
         // Segment changeover
         if (*str == '.') {
             // Must have some digits in segment
@@ -32,7 +32,7 @@ int valid_ip (char *str) {
             return 0;
         // Preventing starting with '0'
         if ((ch_cnt > 0) && (accum == 0))
-        	return 0;
+            return 0;
         // Accumulate and check segment
         if ((accum = accum * 10 + *str - '0') > 255)
             return 0;

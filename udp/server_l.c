@@ -23,10 +23,10 @@ int main()
 
 	// Get the ip address of the server
 	printf("Please enter the IP server:\n");
-	gets(server_ip);
+	fgets(server_ip, IP_LEN, stdin);
 	while(!valid_ip(server_ip)) {
 		printf("Please enter a valid IP address:\n");
-		gets(server_ip);
+		fgets(server_ip, IP_LEN, stdin);
 	}
 
 	// Get the port number (assuming the input is an integer)
@@ -50,7 +50,7 @@ int main()
 	
 	// Setup address structure
 	server_addr.sin_family = AF_INET;
-	server_addr.sin_addr.S_un.S_addr = inet_addr(server_ip);
+	server_addr.sin_addr.s_addr = inet_addr(server_ip);
 	server_addr.sin_port = htons(port_num);
 	
 	// Bind
@@ -61,7 +61,7 @@ int main()
 	puts("Bind done");
 
 	// Start the communication, listening to data
-	while(strcmp("exit", buff))
+	while(strcmp("exit\n", buff))
 	{
 		printf("Waiting for data...");
 		fflush(stdout);
@@ -87,8 +87,7 @@ int main()
 	}
 
 	// Close the socket
-	closesocket(socket_id);
-	WSACleanup();
+	close(socket_id);
 	
 	return 0;
 }

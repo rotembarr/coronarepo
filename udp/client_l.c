@@ -23,10 +23,10 @@ int main()
 
 	// Get the ip address of the server
 	printf("Please enter the IP server:\n");
-	gets(server_ip);
+	fgets(server_ip, IP_LEN, stdin);
 	while(!valid_ip(server_ip)) {
 		printf("Please enter a valid IP address:\n");
-		gets(server_ip);
+		fgets(server_ip, IP_LEN, stdin);
 	}
 
 	// Get the port number (assuming the input is an integer)
@@ -38,7 +38,7 @@ int main()
 	}
 	
 	// Create the socket
-	if ((socket_id=socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == SOCKET_ERROR) {
+	if ((socket_id=socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
 		printf("socket() failed.");
 		exit(EXIT_FAILURE);
 	}
@@ -47,16 +47,16 @@ int main()
 	memset(&server_addr, '\0', sizeof(server_addr));
 	server_addr.sin_family = AF_INET;
 	server_addr.sin_port = htons(port_num);
-	server_addr.sin_addr.S_un.S_addr = inet_addr(server_ip);
+	server_addr.sin_addr.s_addr = inet_addr(server_ip);
 	
 	// Start the communication
-	while(strcmp("exit", buff) & strcmp("quit", buff))
+	while(strcmp("exit\n", buff) & strcmp("quit\n", buff))
 	{
 		printf("Enter message :\n");
-		gets(message);
+		fgets(message, BUFF_LEN, stdin);
 		
 		// Send the message to the server
-		if (sendto(socket_id, message, strlen(message) ,0 , (struct sockaddr *) &server_addr, slen) == SOCKET_ERROR) {
+		if (sendto(socket_id, message, strlen(message) ,0 , (struct sockaddr *) &server_addr, slen) < 0) {
 			perror("sendto() failed.");
 			exit(EXIT_FAILURE);
 		}
@@ -66,7 +66,7 @@ int main()
 		memset(buff, '\0', BUFF_LEN);
 
 		// Try to receive some data, this is a blocking call
-		if (recvfrom(socket_id, buff, BUFF_LEN, 0, (struct sockaddr *) &server_addr, &slen) == SOCKET_ERROR)
+		if (recvfrom(socket_id, buff, BUFF_LEN, 0, (struct sockaddr *) &server_addr, &slen) < 0)
 		{
 			perror("recvfrom() failed.");
 			exit(EXIT_FAILURE);
@@ -77,8 +77,7 @@ int main()
 	}
 
 	// Close the socket
-	closesocket(socket_id);
-	WSACleanup();
+	close(socket_id);
 
 	return 0;
 }
