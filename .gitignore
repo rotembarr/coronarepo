@@ -1,2 +1,13 @@
 .idea
 *.pyc
+*.setup
+*.key
+*.vpd
+Logs/
+DVEfiles/
+csrc/
+AN.DB/
+*.vcd
+*.old
+*.uvm
+*.h

@@ -1,0 +1,44 @@
+
+# Parameters
+VLOG_PATH=/sec_storage/general/vcs_test/vlog_files.txt
+LOGS_PATH=Logs
+SIMV_PATH=${LOGS_PATH}/simv
+TEST_NAME=adpcm_test
+TOP_TB_NAME=top_tb
+GPP_PATH='/home/........../gcc/linux/gcc-x.x.x/bin/g++'
+GCC_PATH='/home/........../gcc/linux/gcc-x.x.x/bin/gcc'
+GPP_FILES_PATH=''
+
+# Commands
+VERILOG_ANALYZE_COMMAND=$(VCS_HOME)/bin/vlogan -sverilog -full64 -work WORK +incdir+$(UVM_HOME)/src $(UVM_HOME)/uvm_pkg.sv -ntb_opts uvm 
+
+ELABORATION_CMD=$(VCS_HOME)/bin/vcs -nc +vc +acc +vpi -licqueue -full64 -timescale=1ns/1ns -CFLAGS -DVCS \
+$(UVM_HOME)/dpi/uvm_dpi.cc -suppress=SIMU-RESOLUTION,VCS_PARAL \
+-j1 ${TOP_TB_NAME} -l ${LOGS_PATH}/elaboration.log -o ${SIMV_PATH}
+
+SIMULATION_CMD=${SIMV_PATH} +UVM_VERBOSITY=UVM_MEDIUM +UVM_TESTNAME=${TEST_NAME} +UVM_NO_RELNOTES -l ${LOGS_PATH}/${TEST_NAME}.log \
++vcs+loopreport[+10000]+lic+wait +ntb_random_reseed +ntb_random_seed=1
+
+# Not used
+UVM_CMP=$(VCS_HOME)/bin/vlogan -lca -timescale=1ns/1ns \
+    +incdir+$(UVM_HOME)/src $(UVM_HOME)/src/uvm.sv \
+     +incdir+$(UVM_HOME)/vcs $(UVM_HOME)/vcs/uvm_custom_install_vcs_recorder.sv\
+      -CFLAGS -DVCS -nc -sverilog -ntb_opts uvm -work UVM -full64
+
+GPP_CMP=$(VCS_HOME)/bin/syscan -cpp ${GPP_PATH} -cc ${GCC_PATH} -cflags '-g' -full64 -f $(GPP_FILES_PATH) -l '${LOGS_PATH}/syscan.log'
+
+uvm:
+	$(UVM_CMP)
+
+analyze:
+	${VERILOG_ANALYZE_COMMAND} -f ${VLOG_PATH}
+
+elaboration: analyze
+	mkdir Logs
+	${ELABORATION_CMD}
+
+sim: elaboration
+	${SIMULATION_CMD}
+
+clean: 
+	rm AN.DB/ csrc/ Logs/ ucli.key vc_hdrs.h verilog.dump  -rf

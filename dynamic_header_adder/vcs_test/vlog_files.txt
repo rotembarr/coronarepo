@@ -1,0 +1,5 @@
+/sec_storage/asafb/dynamic_header_adder/vcs_test/src/rtl/generic_func_pack.sv
+/sec_storage/asafb/dynamic_header_adder/vcs_test/src/rtl/avalon_st_if.sv
+/sec_storage/asafb/dynamic_header_adder/vcs_test/src/rtl/dynamic_header_adder.sv
+/sec_storage/asafb/dynamic_header_adder/vcs_test/src/rtl/test.sv
+/sec_storage/asafb/dynamic_header_adder/vcs_test/src/tb/dynamic_header_adder_tb.sv
