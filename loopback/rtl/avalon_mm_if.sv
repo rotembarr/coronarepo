@@ -1,6 +1,6 @@
 // Simple avalon mm interface, to be moved to general
 
-interface avalon_mm_if #(parameter DATA_WIDTH = 32, parameter ADDR_WIDTH = 32) (logic clk);
+interface avalon_mm_if #(parameter DATA_WIDTH = 32, parameter ADDR_WIDTH = 32) (input logic clk);
 	logic [ADDR_WIDTH-1:0] address;
 	logic read, write;
 	logic [DATA_WIDTH-1:0] writedata, readdata;

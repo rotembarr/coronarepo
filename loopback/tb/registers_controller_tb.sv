@@ -6,7 +6,7 @@ module registers_controller_tb ();
 	logic clk;
 	logic rst_n;
 	logic msg_enter;
-	avalon_mm_if reg_mm();
+	avalon_mm_if reg_mm(.clk(clk));
 
 	registers_controller #(
 		.ADDR_BASE(0)

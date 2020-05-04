@@ -1,6 +1,6 @@
 // Simple avalon st interface, to be moved to general
 
-interface avalon_st_if #(parameter DATA_WIDTH = 32) (logic clk);
+interface avalon_st_if #(parameter DATA_WIDTH = 32) (input logic clk);
 	logic vld, rdy;
 	logic sop, eop;
 	logic [DATA_WIDTH-1:0] data;
