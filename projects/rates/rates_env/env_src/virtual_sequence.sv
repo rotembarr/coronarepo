@@ -52,7 +52,6 @@ class virtual_sequence extends uvm_sequence;
       
         // Send messeges to the sequencer.
         for (int i = 0; i < parameters.msg_seq_num_of_calls; i++) begin
-            $display("Send msg",);
 
             // Send the msg
        		`uvm_do_on_with(msg_sequence, p_sequencer.msg_in_sequencer, {

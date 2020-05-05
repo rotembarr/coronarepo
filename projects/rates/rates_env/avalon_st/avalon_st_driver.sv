@@ -85,6 +85,11 @@ class avalon_st_driver #(
                 this.slave_driver();
             end
 
+            
+            if (this.configuration.is_rate_test == 1'b1) begin
+                this.rate_driver();
+            end
+                
             /*------------------------------------------------------------------------------
             -- Clock Alignment.
             ------------------------------------------------------------------------------*/
@@ -108,7 +113,8 @@ class avalon_st_driver #(
 		bit                                           						sop;			// a 'sop' signal to drive in the vif
 		bit                                           						eop;			// a 'eop' signal to drive in the vif
 		
-      	// wait one clock cycle for the clocking block reset to kick in
+      	
+        // wait one clock cycle for the clocking block reset to kick in
 		@ (this.vif.master_cb);
       
 		forever begin
@@ -142,7 +148,7 @@ class avalon_st_driver #(
               
 				// continue driving the signal until valid and ready are both 1 
               	do begin
-                  
+
 					// randomize valid
 					std::randomize(valid) 	with{	
 												valid dist{
@@ -205,6 +211,51 @@ class avalon_st_driver #(
 		end	// forever
 	
     endtask	// slave_driver
+
+
+     /*------------------------------------------------------------------------------
+    -- Rate Driver.
+    ------------------------------------------------------------------------------*/
+    virtual task rate_driver();
+        // int burst_length = 0;
+        // Set valid Prob according to rate calc
+        // 
+        // rate / bandwidth   (Rate in Gbps * 10**9) / DATA_WIDTH_IN_BYTES * 8
+        // ---------------- = ------------------------------------------------
+        // Cycle per second         CLK_CYCLE_TIME * 2 * 10**9;
+        // 
+        longint rate_per_bandwidth = (10 * 10**9) / (DATA_WIDTH_IN_BYTES * 8);
+        longint ccps = (10**9 / 10); // cant access CLK_CYCLE_TIME
+        real fixed_rate_valid_p = 100 * (real'(rate_per_bandwidth) / real'(ccps));
+        
+        $display("DATA_WIDTH_IN_BYTES = ", DATA_WIDTH_IN_BYTES);
+        $display("rate_per_bandwidth = ", rate_per_bandwidth);
+        $display("ccps = ", ccps);
+        $display("fixed_rate_valid_p = ", fixed_rate_valid_p);
+        
+
+        if (this.configuration.is_master == SLAVE) begin
+            this.configuration.rdy_p = 100;
+        end
+        else if (this.configuration.is_master == MASTER) begin
+            
+            this.configuration.valid_p = fixed_rate_valid_p;
+
+            $display("this.configuration.valid_p ", this.configuration.valid_p);
+            //  // wait one clock cycle for the clocking block reset to kick in
+            // @ (this.vif.master_cb);
+      
+            // forever begin
+            //     // randomize burst_length
+            //     std::randomize(burst_length) with {
+            //         burst_length inside{[1:100]};
+            //         };
+
+                          
+            // end // forever
+        end
+    
+    endtask // rate_driver
 
 endclass
 

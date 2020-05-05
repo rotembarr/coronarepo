@@ -63,8 +63,8 @@ class rate_sampler #(int unsigned  DEST_RATE = 0, int unsigned DEVIATION_PERCENT
 
     rate = this.getRate();
     bps = rate * 10**9;
-    Mbps = bps / 2**20;
-    Gbps = Mbps / 1024;
+    Mbps = bps / 10**6;
+    Gbps = bps / 10**9;
 
     
     $display("this.bits_recorded  = ", this.bits_recorded);
