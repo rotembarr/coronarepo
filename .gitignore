@@ -3,3 +3,7 @@
 *.bak
 .*
 *qsys/*/
+*.sopcinfo
+*/output_files/
+*db/
+*.qws
