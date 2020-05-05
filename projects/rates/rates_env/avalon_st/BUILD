@@ -14,6 +14,7 @@ block(
     vlog_files = [
         "avalon_st_sequence_item.sv",
         "avalon_st_monitor_item.sv",
+        "rate_sampler.sv",
         "avalon_st_sequencer.sv",
         "avalon_st_configuration.sv",
         "avalon_st_driver.sv",

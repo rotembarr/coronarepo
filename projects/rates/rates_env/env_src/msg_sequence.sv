@@ -53,7 +53,7 @@ class msg_sequence extends uvm_sequence #(avalon_st_sequence_item #(verification
     -------------------------------------------------------------------------------*/
     virtual task body ();
         // Send a Messege.
-      this.randomize() with {data_size_in_bytes inside{[1:100]};};
+        // this.randomize() with {data_size_in_bytes.size() == 100};
       
         `uvm_do_on_with(req, p_sequencer, {
             data_in_bytes.size() == data_queue_in_bytes.size();

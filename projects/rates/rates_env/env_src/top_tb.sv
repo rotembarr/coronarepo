@@ -71,6 +71,7 @@ module top_tb ();
       
        // Start the test.
       uvm_root::get().run_test("base_test");
+
     end
 endmodule
 

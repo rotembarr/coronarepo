@@ -26,6 +26,11 @@ class avalon_st_monitor #(
     // Output item declaration.
     avalon_st_monitor_item #(DATA_WIDTH_IN_BYTES) data_item  = null;
 
+    // Rate record item
+    rate_sampler avalon_st_rate_sampler = null;
+
+    int cc_counter = 0;
+
     /*------------------------------------------------------------------------------
     -- Tasks & Functions declarations.
     ------------------------------------------------------------------------------*/
@@ -40,6 +45,7 @@ class avalon_st_monitor #(
         this.configuration = null;
         this.data_export   = null;
       	this.data_item     = avalon_st_monitor_item #(DATA_WIDTH_IN_BYTES)::type_id::create ("data_item", this);
+        this.avalon_st_rate_sampler = rate_sampler #()::type_id::create ("avalon_st_rate_sampler", this);
     endfunction
 
     /*------------------------------------------------------------------------------
@@ -71,6 +77,7 @@ class avalon_st_monitor #(
         // Run the monitor task.
         fork
             this.monitor_task();
+            this.monitor_rate_task();
         join_none
     endtask
 
@@ -82,9 +89,7 @@ class avalon_st_monitor #(
         // TODO - write you code
       bit [DATA_WIDTH_IN_BYTES*8 - 1:0]	data_in_words[$] = {};// a queue of data words to get from the vif
       
-		forever begin
-          	
-            
+		forever begin           
           
           	// we wait until ready and valid are 1
           	if((this.vif.monitor_cb.rdy === 1) && (this.vif.monitor_cb.valid === 1)) begin
@@ -118,10 +123,40 @@ class avalon_st_monitor #(
           
           	// wait for clock
 			@ (this.vif.monitor_cb);
+            cc_counter += 1;
+
           
 		end	// forever
 		
     endtask
+
+     /*------------------------------------------------------------------------------
+    -- Monitor Task.
+    ------------------------------------------------------------------------------*/
+    virtual task monitor_rate_task ();
+        forever begin
+            
+            // we wait until ready and valid are 1
+            if((this.vif.monitor_cb.rdy === 1) && (this.vif.monitor_cb.valid === 1)) begin
+                
+                // Add recorded bits
+                this.avalon_st_rate_sampler.write(DATA_WIDTH_IN_BYTES * 8 - this.vif.monitor_cb.empty);
+              
+            end //rdy & valid == 1
+          
+            // wait for clock
+            @ (this.vif.monitor_cb);
+        
+        end // forever
+    endtask
+
+    virtual function void extract_phase (uvm_phase phase);
+       super.extract_phase(phase);
+
+      // $display("cc_counter = ", cc_counter);
+   endfunction
+
+
 
 endclass
 

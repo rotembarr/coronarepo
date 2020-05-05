@@ -47,11 +47,12 @@ class virtual_sequence extends uvm_sequence;
     -- Body.
     -------------------------------------------------------------------------------*/
     virtual task body ();
-        int unsigned msg_size   = 0;
+        int unsigned msg_size   = 100;
         time         delay_time = 0ns;
       
         // Send messeges to the sequencer.
         for (int i = 0; i < parameters.msg_seq_num_of_calls; i++) begin
+            $display("Send msg",);
 
             // Send the msg
        		`uvm_do_on_with(msg_sequence, p_sequencer.msg_in_sequencer, {

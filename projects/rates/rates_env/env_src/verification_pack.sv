@@ -6,7 +6,7 @@ package verification_pack;
     /*------------------------------------------------------------------------------
     -- Simulation parameter.
     ------------------------------------------------------------------------------*/
-    time                    CLK_CYCLE_TIME   = 2ns;
+    time                    CLK_CYCLE_TIME   = 5ns;
     time                    TIMEOUT          = 10ms;
     bit                     TOPOLOGY         = 1'b1;
     bit                     INFINITE         = 1'b0;
@@ -16,7 +16,7 @@ package verification_pack;
     -- Interfaces & module instantion generics.
     ------------------------------------------------------------------------------*/
     `ifndef DATA_WIDTH_IN_BYTES
-        `define DATA_WIDTH_IN_BYTES 4
+        `define DATA_WIDTH_IN_BYTES 16
     `endif
     /*------------------------------------------------------------------------------
     -- Interfaces parameters.
