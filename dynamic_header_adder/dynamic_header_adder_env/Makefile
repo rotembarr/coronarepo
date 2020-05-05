@@ -1,6 +1,6 @@
 
 # Parameters
-ROOT_PATH=/sec_storage/asafb/dynamic_header_adder/dynamic_header_adder_env
+ROOT_PATH=/sec_storage/asafb/coronarepo/dynamic_header_adder/dynamic_header_adder_env
 VLOG_PATH=$(ROOT_PATH)/vlog_files.txt
 LOGS_FOLDER_NAME=Logs
 SIMV_PATH=${LOGS_FOLDER_NAME}/simv
@@ -17,7 +17,7 @@ $(UVM_HOME)/dpi/uvm_dpi.cc -j1 ${TOP_TB_NAME} -l ${LOGS_FOLDER_NAME}/elaboration
 SIMULATION_CMD=${SIMV_PATH} +UVM_VERBOSITY=UVM_MEDIUM +UVM_TESTNAME=${TEST_NAME} -l ${LOGS_FOLDER_NAME}/${TEST_NAME}.log \
  +ntb_random_reseed +ntb_random_seed=1
 
-COVERAGE_CMD=$(VCS_HOME)/bin/urg ${SIMV_PATH}
+COVERAGE_CMD=$(VCS_HOME)/bin/urg
 
 analyze:
 	${VERILOG_ANALYZE_COMMAND} -f ${VLOG_PATH}
@@ -33,7 +33,7 @@ gui: elaboration
 	$(SIMULATION_CMD) -gui
 
 covg: elaboration
-	${SIMULATION_CMD} --SHOW_COVERAGE
+	${COVERAGE_CMD}
 
 clean: 
 	rm AN.DB/ csrc/ Logs/ ucli.key vc_hdrs.h verilog.dump *inter* dump* -rf
