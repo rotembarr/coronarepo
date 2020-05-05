@@ -17,7 +17,7 @@ module led_blinker_controller (
 logic [31:0] test_reg;
 
 logic cntr_active;
-logic [29:0] blink_counter;
+logic [25:0] blink_counter;
 
 always_ff @(posedge clk or negedge rst) begin : proc_sync
 	if(~rst) begin
@@ -44,15 +44,15 @@ always_ff @(posedge clk or negedge rst) begin : proc_sync
 			blink_counter <= 0;
 		end
 
-		if (blink_counter == {30{1'b1}}) begin
+		if (blink_counter == {26{1'b1}}) begin
 			led_active <= ~led_active;
 		end
 
 		master_mm_readdata 		<= 0;
-		master_mm_readdatavalid <= 1'b1;
+		master_mm_readdatavalid <= 1'b0;
 		if (master_mm_read) begin
 			if (master_mm_address == 0) begin
-				master_mm_readdata 		<= {{29{1'b0}}, cntr_active};
+				master_mm_readdata 		<= {{31{1'b0}}, cntr_active};
 				master_mm_readdatavalid <= 1'b1;
 			end else if (master_mm_address == 4) begin
 				master_mm_readdata 		<= test_reg;
