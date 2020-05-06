@@ -26,8 +26,8 @@ class avalon_st_monitor #(
     // Output item declaration.
     avalon_st_monitor_item #(DATA_WIDTH_IN_BYTES) data_item  = null;
 
-    // Rate record item
-    rate_sampler avalon_st_rate_sampler = null;
+    // Rate sampler
+    rate_sampler if_rate_sampler = null;
 
     int cc_counter = 0;
 
@@ -45,7 +45,7 @@ class avalon_st_monitor #(
         this.configuration = null;
         this.data_export   = null;
       	this.data_item     = avalon_st_monitor_item #(DATA_WIDTH_IN_BYTES)::type_id::create ("data_item", this);
-        this.avalon_st_rate_sampler = rate_sampler #()::type_id::create ("avalon_st_rate_sampler", this);
+        this.if_rate_sampler = null;
     endfunction
 
     /*------------------------------------------------------------------------------
@@ -57,6 +57,11 @@ class avalon_st_monitor #(
         // Connect the configuration to the driver.
         if (!uvm_config_db #(avalon_st_configuration)::get(this, "", "configuration", this.configuration)) begin
             `uvm_fatal(this.get_name().toupper(), {"Monitor did not find avalon_st_configuration in the environment: ", this.get_full_name(), ".configuration"});
+        end
+
+        // Connect the configuration to the driver.
+        if (!uvm_config_db #(rate_sampler)::get(this, "", "if_rate_sampler", this.if_rate_sampler)) begin
+            `uvm_fatal(this.get_name().toupper(), {"Monitor did not find if_rate_sampler in the environment: ", this.get_full_name(), ".if_rate_sampler"});
         end
 
         // Connect the monitor to the interface.
@@ -140,7 +145,7 @@ class avalon_st_monitor #(
             if((this.vif.monitor_cb.rdy === 1) && (this.vif.monitor_cb.valid === 1)) begin
                 
                 // Add recorded bits
-                this.avalon_st_rate_sampler.write(DATA_WIDTH_IN_BYTES * 8 - this.vif.monitor_cb.empty);
+                this.if_rate_sampler.write(DATA_WIDTH_IN_BYTES * 8 - this.vif.monitor_cb.empty);
               
             end //rdy & valid == 1
           

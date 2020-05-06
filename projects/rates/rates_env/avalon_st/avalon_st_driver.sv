@@ -21,6 +21,9 @@ class avalon_st_driver #(
     // Agent configuration.
     avalon_st_configuration configuration = null;
 
+    // Rate sampler
+    rate_sampler if_rate_sampler = null;
+
     // Synchronize with clock-block event.
     event posedge_clk;
 
@@ -33,6 +36,7 @@ class avalon_st_driver #(
         // Initialize data members.
         this.vif           = null;
         this.configuration = null;
+        this.if_rate_sampler = null;
     endfunction
 
     /*------------------------------------------------------------------------------
@@ -44,6 +48,11 @@ class avalon_st_driver #(
         // Connect the configuration to the driver.
         if (!uvm_config_db #(avalon_st_configuration)::get(this, "", "configuration", this.configuration)) begin
             `uvm_fatal(this.get_name().toupper(), {"Driver did not find avalon_st_configuration in the environment: ", this.get_full_name(), ".configuration"});
+        end
+
+        // Connect the configuration to the driver.
+        if (!uvm_config_db #(rate_sampler)::get(this, "", "if_rate_sampler", this.if_rate_sampler)) begin
+            `uvm_fatal(this.get_name().toupper(), {"Monitor did not find if_rate_sampler in the environment: ", this.get_full_name(), ".if_rate_sampler"});
         end
 
         // Connect the driver to the interface.
@@ -217,13 +226,17 @@ class avalon_st_driver #(
     -- Rate Driver.
     ------------------------------------------------------------------------------*/
     virtual task rate_driver();
+        int unsigned burst_length = 0;
+        int unsigned fixed_rate_length = 0;
+        bit fixed_rate_flag = 1'b1;
+
         // Set valid Prob according to rate calc
         // 
         // rate / bandwidth   (Rate in Gbps * 10**9) / DATA_WIDTH_IN_BYTES * 8
         // ---------------- = ------------------------------------------------
         // Cycle per second         10**9  / (CLK_CYCLE_TIME * 2)
         
-        longint rate_per_bandwidth = (this.configuration.rate_in_Gbps * 10**9) / (DATA_WIDTH_IN_BYTES * 8);
+        longint rate_per_bandwidth = (this.configuration.dest_rate_in_Gbps * 10**9) / (DATA_WIDTH_IN_BYTES * 8);
         
         // Can't access verification_pack::CLK_CYCLE_TIME
         longint ccps = 10**9 / (this.configuration.clk_cycle_time * 2);
@@ -241,14 +254,65 @@ class avalon_st_driver #(
 
             $display("this.configuration.valid_p ", this.configuration.valid_p);
 
-        end
-            //  // wait one clock cycle for the clocking block reset to kick in
-            // @ (this.vif.master_cb);
-            // forever begin
-            //     // randomize burst_length
-            //     std::randomize(burst_length) with {
-            //         burst_length inside{[1:100]};
-            //         };
+            // wait one clock cycle for the clocking block reset to kick in
+            @ (this.vif.master_cb);
+            
+            forever begin
+                $display("FIXED RATE *****************");
+
+                // Set if fixed rate or burst
+                std::randomize(fixed_rate_flag) with{   
+                    fixed_rate_flag dist{
+                            1 := this.configuration.fixed_rate_p,
+                            0 := this.configuration.burst_p
+                    };
+                };
+
+                if (fixed_rate_flag == 1'b1) begin
+                     
+                     // Will round up since valid_p is an integer.
+                    this.configuration.valid_p = fixed_rate_valid_p;
+
+                    // randomize fixed_rate_length.
+                    std::randomize(fixed_rate_length) with {
+                        fixed_rate_length inside{[this.configuration.min_fixed_rate_length:this.configuration.max_fixed_rate_length - 1]};
+                        };
+
+                    repeat (fixed_rate_length) begin
+                        @ (this.vif.master_cb);
+                    end
+                end else begin // Burst
+                    $display("BURST !!!!!!!!!");
+
+                    // Max rate
+                    this.configuration.valid_p = 100;
+
+                    // randomize burst_length
+                    std::randomize(burst_length) with {
+                        burst_length inside{[this.configuration.min_burst_length:this.configuration.max_burst_length - 1]};
+                        };
+
+                    repeat (burst_length) begin
+                        @ (this.vif.master_cb);
+                    end
+
+                    this.if_rate_sampler.printe_rate();
+
+                    // Return to noraml rate
+                    this.configuration.valid_p = 0;
+
+                    while (this.if_rate_sampler.is_rate_high(this.configuration.dest_rate_in_Gbps, this.configuration.deviation_percent_allowed) ) begin
+                        @ (this.vif.master_cb);
+                    end
+
+                    this.if_rate_sampler.printe_rate();
+
+                end // fixed rate / burst if
+            
+            end // forever
+        
+        end // Master / slave if
+
     endtask // rate_driver
 
 endclass
