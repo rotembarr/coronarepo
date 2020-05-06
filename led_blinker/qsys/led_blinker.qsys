@@ -45,7 +45,7 @@
    {
       datum baseAddress
       {
-         value = "1024";
+         value = "268435456";
          type = "String";
       }
    }
@@ -448,7 +448,7 @@
    start="jtag_to_mm.master"
    end="mm_bridge_0.s0">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x0400" />
+  <parameter name="baseAddress" value="0x10000000" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection kind="clock" version="19.1" start="clk_0.clk" end="jtag_to_mm.clk" />

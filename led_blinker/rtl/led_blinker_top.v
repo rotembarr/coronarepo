@@ -74,7 +74,7 @@ input			XCVR_REFCLK_125;
 	wire reg_mm_readdatavalid;
 	wire [31:0] reg_mm_writedata;
 	wire reg_mm_waitrequest;
-	wire [9:0] reg_mm_address;
+	wire [31:0] reg_mm_address;
 	wire reg_mm_write;
 	wire reg_mm_read;
 
