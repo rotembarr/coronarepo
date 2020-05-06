@@ -217,44 +217,38 @@ class avalon_st_driver #(
     -- Rate Driver.
     ------------------------------------------------------------------------------*/
     virtual task rate_driver();
-        // int burst_length = 0;
         // Set valid Prob according to rate calc
         // 
         // rate / bandwidth   (Rate in Gbps * 10**9) / DATA_WIDTH_IN_BYTES * 8
         // ---------------- = ------------------------------------------------
-        // Cycle per second         CLK_CYCLE_TIME * 2 * 10**9;
-        // 
-        longint rate_per_bandwidth = (10 * 10**9) / (DATA_WIDTH_IN_BYTES * 8);
-        longint ccps = (10**9 / 10); // cant access CLK_CYCLE_TIME
-        real fixed_rate_valid_p = 100 * (real'(rate_per_bandwidth) / real'(ccps));
+        // Cycle per second         10**9  / (CLK_CYCLE_TIME * 2)
         
-        $display("DATA_WIDTH_IN_BYTES = ", DATA_WIDTH_IN_BYTES);
-        $display("rate_per_bandwidth = ", rate_per_bandwidth);
-        $display("ccps = ", ccps);
-        $display("fixed_rate_valid_p = ", fixed_rate_valid_p);
+        longint rate_per_bandwidth = (this.configuration.rate_in_Gbps * 10**9) / (DATA_WIDTH_IN_BYTES * 8);
         
+        // Can't access verification_pack::CLK_CYCLE_TIME
+        longint ccps = 10**9 / (this.configuration.clk_cycle_time * 2);
+
+        // Multiply by 100 to change from [0-1] to [0-100] probability range.
+        real fixed_rate_valid_p = 100 * (real'(rate_per_bandwidth) / real'(ccps));        
 
         if (this.configuration.is_master == SLAVE) begin
             this.configuration.rdy_p = 100;
         end
         else if (this.configuration.is_master == MASTER) begin
             
+            // Will round up since valid_p is an integer.
             this.configuration.valid_p = fixed_rate_valid_p;
 
             $display("this.configuration.valid_p ", this.configuration.valid_p);
+
+        end
             //  // wait one clock cycle for the clocking block reset to kick in
             // @ (this.vif.master_cb);
-      
             // forever begin
             //     // randomize burst_length
             //     std::randomize(burst_length) with {
             //         burst_length inside{[1:100]};
             //         };
-
-                          
-            // end // forever
-        end
-    
     endtask // rate_driver
 
 endclass

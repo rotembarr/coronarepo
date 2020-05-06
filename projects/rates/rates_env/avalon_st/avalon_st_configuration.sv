@@ -11,7 +11,11 @@ class avalon_st_configuration extends uvm_component;
 	// configure the valid amd ready probabilties
 	int valid_p = 70;
 	int rdy_p 	= 70;
-    bit is_rate_test = 1'b1; 
+
+    // Rate configuration
+    bit is_rate_test = 1'b1;
+    real unsigned rate_in_Gbps = 5;
+    int unsigned clk_cycle_time = 5;
 	
     /*-------------------------------------------------------------------------------
     -- UVM Macros - Factory register.
@@ -24,6 +28,8 @@ class avalon_st_configuration extends uvm_component;
 		`uvm_field_int(valid_p , UVM_DEFAULT | UVM_UNSIGNED)
 		`uvm_field_int(rdy_p , UVM_DEFAULT | UVM_UNSIGNED)
         `uvm_field_int(is_rate_test , UVM_DEFAULT)
+        `uvm_field_real(rate_in_Gbps , UVM_DEFAULT | UVM_UNSIGNED)
+        `uvm_field_int(clk_cycle_time , UVM_DEFAULT | UVM_UNSIGNED)
     `uvm_component_utils_end
 
     /*------------------------------------------------------------------------------
