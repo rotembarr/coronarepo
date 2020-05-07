@@ -1,10 +1,11 @@
 .idea
 *.pyc
 *.bak
-.*
-*qsys/*/
+*/.*
+*/qsys/*/
 *.sopcinfo
 */output_files/
 *db/
 *.qws
 *dump.txt
+*.mif
