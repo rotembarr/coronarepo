@@ -111,8 +111,7 @@ class avalon_st_agent #(
 
         //Connect to the reporter. For now, print the results.
         this.if_rate_sampler.printe_rate();
-        this.if_rate_sampler.is_rate_valid(this.configuration.dest_rate_in_Gbps, this.configuration.deviation_percent_allowed);
-        // this.if_rate_sampler.check_rate(4, this.configuration.deviation_percent_allowed);
+        this.if_rate_sampler.is_rate_valid();
 
    endfunction
 endclass

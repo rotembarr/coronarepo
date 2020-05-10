@@ -9,31 +9,11 @@ class avalon_st_configuration extends uvm_component;
     verification_master_slave_enum is_master = MASTER;
 	
 	// configure the valid amd ready probabilties
-	int valid_p = 70;
-	int rdy_p 	= 70;
+	int valid_p = 100;
+	int rdy_p 	= 100;
 
     // Rate configuration
-    bit is_rate_test = 1'b1;
-    real dest_rate_in_Gbps = 5;
-
-    // deviation percent allowed for a valid test
-    real deviation_percent_allowed = 5;
-
-    // Cant access verification pack cc
-    int unsigned clk_cycle_time = 5;
-
-
-    // configure the fixed rate amd burst probabilties
-    int fixed_rate_p = 70;
-    int burst_p      = 20;
-    
-    // fixed_rate_length ranges
-    int unsigned min_fixed_rate_length = 90;
-    int unsigned max_fixed_rate_length = 100;
-
-    // burst_length ranges
-    int unsigned min_burst_length = 0;
-    int unsigned max_burst_length = 1000;
+    bit is_rate_test = 1'b0;
 
     /*-------------------------------------------------------------------------------
     -- UVM Macros - Factory register.
@@ -46,11 +26,6 @@ class avalon_st_configuration extends uvm_component;
 		`uvm_field_int(valid_p , UVM_DEFAULT | UVM_UNSIGNED)
 		`uvm_field_int(rdy_p , UVM_DEFAULT | UVM_UNSIGNED)
         `uvm_field_int(is_rate_test , UVM_DEFAULT)
-        `uvm_field_real(dest_rate_in_Gbps , UVM_DEFAULT | UVM_UNSIGNED)
-        `uvm_field_real(deviation_percent_allowed , UVM_DEFAULT | UVM_UNSIGNED)
-        `uvm_field_int(clk_cycle_time , UVM_DEFAULT | UVM_UNSIGNED)
-        `uvm_field_int(min_fixed_rate_length , UVM_DEFAULT | UVM_UNSIGNED)
-        `uvm_field_int(max_fixed_rate_length , UVM_DEFAULT | UVM_UNSIGNED)
     `uvm_component_utils_end
 
     /*------------------------------------------------------------------------------

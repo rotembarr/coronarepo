@@ -64,7 +64,10 @@ class base_test extends uvm_test;
 		// msg_out Agent. [Avalon ST]
 		uvm_config_db #(uvm_active_passive_enum)       ::set(this.env, "msg_out_agent*",              "is_active",         UVM_ACTIVE);
 		uvm_config_db #(verification_master_slave_enum)::set(this.env, "msg_out_agent.configuration", "is_master",         SLAVE);
-
+        
+        // Rates
+        uvm_config_db #(real) ::set(this.env, "msg_in_agent*",  "dest_rate_in_Gbps", verification_pack::dest_rate_in_Gbps);
+        uvm_config_db #(real) ::set(this.env, "msg_out_agent*", "dest_rate_in_Gbps", verification_pack::dest_rate_in_Gbps);
 
     endfunction
 

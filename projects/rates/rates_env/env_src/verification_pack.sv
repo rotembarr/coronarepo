@@ -21,7 +21,9 @@ package verification_pack;
     /*------------------------------------------------------------------------------
     -- Interfaces parameters.
     ------------------------------------------------------------------------------*/
-    localparam int unsigned DATA_WIDTH_IN_BYTES    = `DATA_WIDTH_IN_BYTES;
+    localparam int unsigned DATA_WIDTH_IN_BYTES = `DATA_WIDTH_IN_BYTES;
+    localparam int unsigned dest_rate_in_Gbps   = 5;
+
 
 endpackage
 

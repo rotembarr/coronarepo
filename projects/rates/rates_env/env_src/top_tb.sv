@@ -59,6 +59,7 @@ module top_tb ();
 
         // Set clock time.
         uvm_config_db #(time)::set(null, "*", "CLK_CYCLE_TIME", verification_pack::CLK_CYCLE_TIME);
+        
     end
 
     /*------------------------------------------------------------------------------
