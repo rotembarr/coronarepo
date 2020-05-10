@@ -1,6 +1,8 @@
 .idea
 *.pyc
 *.bak
+.*
+!.gitignore
 */.*
 */qsys/*/
 *.sopcinfo
