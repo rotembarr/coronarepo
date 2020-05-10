@@ -6,7 +6,7 @@
 */.*
 */qsys/*/
 *.sopcinfo
-*/output_files/
+*output_files/
 *db/
 *.qws
 *dump.txt
