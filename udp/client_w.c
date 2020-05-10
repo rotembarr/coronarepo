@@ -117,9 +117,9 @@ int main()
 		int num_encryptions = (int) ceil((double)strlen(message)/16.0);
 
 		// Setting the memory to \0
-		memset(enc_message_aux, '\0', BUFF_LEN);
-		memset(message_enc, 	'\0', BUFF_LEN);
 		memset(data_to_enc, 	'\0', 17);
+		memset(message_enc, 	'\0', BUFF_LEN);
+		memset(enc_message_aux, '\0', BUFF_LEN);
 
 		// Encrypt for each process of 16-byte
 		for (int i = 0; i < num_encryptions; i++)
@@ -200,8 +200,8 @@ int main()
 	free(message_dec);
 	free(data_to_enc);
 	free(data_to_dec);
-	free(dec_message_aux);
 	free(enc_message_aux);
+	free(dec_message_aux);
 
 	// Close the socket
 	closesocket(socket_id);

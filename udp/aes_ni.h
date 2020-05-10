@@ -4,7 +4,7 @@
 // Need to compile this code with the arguments: -g;-O0;-Wall;-msse2;-msse;-march=native;-maes
 #include <stdint.h>     //for int8_t
 #include <string.h>     //for memcmp
-#include <wmmintrin.h>  //for intrinsics for AES-NI
+#include <wmmintrin.h>  //for AES-NI
 
 //macros
 #define DO_ENC_BLOCK(m,k) \
