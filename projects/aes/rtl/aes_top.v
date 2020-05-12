@@ -111,7 +111,7 @@ register_controller i_register_controller (
 header_adder i_header_adder (
 	.clk           (clk_clk       ),
 	.rst_n         (PB_RESETn     ),
-	.header_data   (0             ),
+	.header_data   (32'hffff0000),
 	.data_in_valid (data_in_valid ),
 	.data_in_sop   (data_in_sop   ),
 	.data_in_eop   (data_in_eop   ),

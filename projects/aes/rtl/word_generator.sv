@@ -20,8 +20,8 @@ assign msg_out_valid 	= cntr_act;
 assign msg_out_data 	= 0;
 
 always_comb begin : proc_async
-	msg_out_sop = (cntr_act == 0);
-	msg_out_eop = (cntr_act == msg_word_cnt);
+	msg_out_sop = (curr_cntr == 0);
+	msg_out_eop = (curr_cntr == msg_word_cnt - 1) & cntr_act;
 end
 
 always_ff @(posedge clk or negedge rst_n) begin : proc_sync

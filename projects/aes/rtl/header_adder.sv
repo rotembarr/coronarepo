@@ -47,7 +47,7 @@ always_comb begin : proc_async
 	data_out_sop 	= (curr_st == IDLE_ST); // Sop always on, until state changes
 	data_out_eop 	= (curr_st == DATA_ST & data_in_eop); // Eop when data eop
 	data_out_data 	= (curr_st == DATA_ST) ? data_in_data : header_sep[header_cntr];
-	data_out_empty  = (data_out_eop) ? data_in_empty : 'b0;
+	data_out_empty  = (data_out_eop) ? data_in_empty : 'b0; // Should be 0 unless given value at eop
 	data_in_ready 	= (curr_st == DATA_ST) & data_out_ready;
 end
 
@@ -58,7 +58,7 @@ always_ff @(posedge clk or negedge rst_n) begin : proc_sync
 	end else begin
 		case (curr_st)
 			IDLE_ST : begin
-				if (data_in_valid) begin
+				if (data_out_valid & data_out_ready) begin
 					if (HEADER_SIZE == DATA_WIDTH) begin
 						curr_st <= DATA_ST;
 					end else begin
@@ -68,7 +68,7 @@ always_ff @(posedge clk or negedge rst_n) begin : proc_sync
 				end
 			end
 			HEADER_ST : begin
-				if (header_cntr < (HEADER_SIZE/DATA_WIDTH) - 1) begin
+				if ((header_cntr < (HEADER_SIZE/DATA_WIDTH) - 1) & (data_out_valid & data_out_ready)) begin
 					header_cntr <= header_cntr + 1;
 				end else begin
 					curr_st <= DATA_ST;
