@@ -1,0 +1,94 @@
+# -------------------------------------------------------------------------- #
+#
+# Copyright (C) 2019  Intel Corporation. All rights reserved.
+# Your use of Intel Corporation's design tools, logic functions 
+# and other software and tools, and any partner logic 
+# functions, and any output files from any of the foregoing 
+# (including device programming or simulation files), and any 
+# associated documentation or information are expressly subject 
+# to the terms and conditions of the Intel Program License 
+# Subscription Agreement, the Intel Quartus Prime License Agreement,
+# the Intel FPGA IP License Agreement, or other applicable license
+# agreement, including, without limitation, that your use is for
+# the sole purpose of programming logic devices manufactured by
+# Intel and sold by Intel or its authorized distributors.  Please
+# refer to the applicable agreement for further details, at
+# https://fpgasoftware.intel.com/eula.
+#
+# -------------------------------------------------------------------------- #
+#
+# Quartus Prime
+# Version 19.1.0 Build 670 09/22/2019 SJ Lite Edition
+# Date created = 16:16:57  May 12, 2020
+#
+# -------------------------------------------------------------------------- #
+#
+# Notes:
+#
+# 1) The default values for assignments are stored in the file:
+#		aes_top_assignment_defaults.qdf
+#    If this file doesn't exist, see file:
+#		assignment_defaults.qdf
+#
+# 2) Altera recommends that you do not modify this file. This
+#    file is updated automatically by the Quartus Prime software
+#    and any changes you make may be lost or overwritten.
+#
+# -------------------------------------------------------------------------- #
+
+
+set_global_assignment -name FAMILY "Cyclone V"
+set_global_assignment -name DEVICE 5CGXFC7C7F23C8
+set_global_assignment -name TOP_LEVEL_ENTITY aes_top
+set_global_assignment -name ORIGINAL_QUARTUS_VERSION 19.1.0
+set_global_assignment -name PROJECT_CREATION_TIME_DATE "16:16:57  MAY 12, 2020"
+set_global_assignment -name LAST_QUARTUS_VERSION "19.1.0 Lite Edition"
+set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
+set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 256
+set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
+set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
+set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
+set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "2.5 V"
+set_instance_assignment -name IO_STANDARD LVDS -to XCVR_REFCLK_125
+set_instance_assignment -name XCVR_REFCLK_PIN_TERMINATION AC_COUPLING -to "XCVR_REFCLK_125(n)"
+set_instance_assignment -name XCVR_REFCLK_PIN_TERMINATION AC_COUPLING -to XCVR_REFCLK_125
+set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to PLL_LOCKED
+set_instance_assignment -name XCVR_RX_COMMON_MODE_VOLTAGE VTT_0P80V -to PC_SGMII_RX
+set_instance_assignment -name XCVR_RX_COMMON_MODE_VOLTAGE VTT_0P80V -to "PC_SGMII_RX(n)"
+set_instance_assignment -name XCVR_RX_COMMON_MODE_VOLTAGE VTT_0P80V -to NET_SGMII_RX
+set_instance_assignment -name XCVR_RX_COMMON_MODE_VOLTAGE VTT_0P80V -to "NET_SGMII_RX(n)"
+set_location_assignment PIN_P9 -to XCVR_REFCLK_125
+set_location_assignment PIN_P8 -to "XCVR_REFCLK_125(n)"
+set_location_assignment PIN_AF30 -to PLL_LOCKED
+set_location_assignment PIN_J2 -to PC_SGMII_RX
+set_location_assignment PIN_J1 -to "PC_SGMII_RX(n)"
+set_location_assignment PIN_N2 -to NET_SGMII_RX
+set_location_assignment PIN_N1 -to "NET_SGMII_RX(n)"
+set_location_assignment PIN_E2 -to NET_PHY_MDIO
+set_location_assignment PIN_E3 -to NET_PHY_MDC
+set_location_assignment PIN_C2 -to PC_PHY_MDIO
+set_location_assignment PIN_C3 -to PC_PHY_MDC
+set_location_assignment PIN_M4 -to NET_SGMII_TX
+set_location_assignment PIN_M3 -to "NET_SGMII_TX(n)"
+set_location_assignment PIN_H4 -to PC_SGMII_TX
+set_location_assignment PIN_H3 -to "PC_SGMII_TX(n)"
+set_location_assignment PIN_G15 -to PB_RESETn
+set_location_assignment PIN_A4 -to NET_PHY_RESETn
+set_location_assignment PIN_A3 -to PC_PHY_RESETn
+set_instance_assignment -name XCVR_TX_VOD 24 -to PC_SGMII_TX
+set_instance_assignment -name XCVR_TX_VOD 24 -to "PC_SGMII_TX(n)"
+set_instance_assignment -name XCVR_TX_VOD 24 -to NET_SGMII_TX
+set_instance_assignment -name XCVR_TX_VOD 24 -to "NET_SGMII_TX(n)"
+set_instance_assignment -name IO_STANDARD "1.5-V PCML" -to PC_SGMII_TX
+set_instance_assignment -name IO_STANDARD "1.5-V PCML" -to PC_SGMII_RX
+set_instance_assignment -name IO_STANDARD "1.5-V PCML" -to NET_SGMII_TX
+set_instance_assignment -name IO_STANDARD "1.5-V PCML" -to NET_SGMII_RX
+set_global_assignment -name VERILOG_FILE rtl/aes_top.v
+set_global_assignment -name QSYS_FILE qsys/two_macs.qsys
+set_global_assignment -name QSYS_FILE qsys/one_mac.qsys
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/header_adder.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../general/rtl/avalon_st_if.sv
