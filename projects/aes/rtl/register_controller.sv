@@ -46,7 +46,7 @@ always_ff @(posedge clk or negedge rst_n) begin : proc_sync
 				CONF_WORDS_ADDR : 	mm_readdata <= {24'b0, msg_words_out};
 				REMOVER_ADDR 	: 	mm_readdata <= {24'b0, msg_words_in_remover};
 				ADDER_ADDR 		: 	mm_readdata <= {24'b0, msg_words_in_adder};
-				default :  			mm_readdata <= {32{'b1}};
+				default :  			mm_readdata <= {32{1'b1}};
 			endcase
 			mm_readdatavalid <= 1;
 		end

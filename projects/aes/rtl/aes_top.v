@@ -136,11 +136,16 @@ word_counter i_word_counter (
 
 
 word_generator i_word_generator (
-	.clk         (clk_clk     ),
-	.rst_n       (PB_RESETn       ),
-	.msg_word_cnt(msg_words_out),
-	.msg_start   (msg_start   ),
-	.msg_out     (data_in     )
+	.clk          (clk_clk      ),
+	.rst_n        (PB_RESETn    ),
+	.msg_word_cnt (msg_words_out),
+	.msg_start    (msg_start    ),
+	.msg_out_valid(data_in_valid),
+	.msg_out_data (data_in_data ),
+	.msg_out_sop  (data_in_sop  ),
+	.msg_out_eop  (data_in_eop  ),
+	.msg_out_empty(data_in_empty),
+	.msg_out_ready(data_in_ready)
 );
 
 

@@ -18,6 +18,7 @@ module header_adder #(
 	output logic data_out_valid,
 	output logic data_out_sop,
 	output logic data_out_eop,
+	output logic [DATA_WIDTH-1:0] data_out_data,
 	output logic [$clog2(DATA_WIDTH/8)-1:0] data_out_empty,
 	input logic data_out_ready
 );
