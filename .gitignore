@@ -1,2 +1,13 @@
 .idea
 *.pyc
+*.bak
+.*
+!.gitignore
+*/.*
+**/qsys/*/
+*.sopcinfo
+*output_files/
+*db/
+*.qws
+*dump.txt
+*.mif
