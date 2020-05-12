@@ -5,15 +5,15 @@ module header_adder #(
 	parameter int DATA_WIDTH 	= 128,
 	parameter int HEADER_SIZE 	= 256
 )(
-	input clk,
-	input rst_n,
+	input logic clk,
+	input logic rst_n,
 	
 	avalon_st_if.slave data_in,
 	input logic [HEADER_SIZE-1:0] header_data,
 	avalon_st_if.master data_out
 );
 
-logic [$clog2(HEADER_SIZE/DATA_WIDTH)] header_cntr;
+logic [$clog2(HEADER_SIZE/DATA_WIDTH):0] header_cntr;
 
 enum int {
 	IDLE_ST,
