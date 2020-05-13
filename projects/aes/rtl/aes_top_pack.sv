@@ -13,4 +13,7 @@ package aes_top_pack;
 	// Counter size
 	localparam int WORD_COUNTER_SIZE 	= 8;
 
+	// General
+	localparam int AES_DATA_WIDTH 		= 128;
+
 endpackage
