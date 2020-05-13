@@ -17,7 +17,7 @@ always_ff @(posedge clk or negedge rst_n) begin : proc_sync
 	end else begin
 		// Resets the counter
 		if (msg_in.valid & msg_in.sop) begin
-			cntr <= {{WORD_COUNTER_SIZE-1{1'b0}, 1'b1};
+			cntr <= {{(WORD_COUNTER_SIZE-1){1'b0}}, 1'b1};
 		// Increases the counter
 		end else if (msg_in.valid) begin
 			cntr <= cntr + 1'b1;

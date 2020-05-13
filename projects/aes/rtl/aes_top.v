@@ -85,7 +85,8 @@ aes_sv_top i_aes_sv_top (
 	.mm_master_read         (mm_master_read         ),
 	.mm_master_readdatavalid(mm_master_readdatavalid),
 	.mm_master_readdata     (mm_master_readdata     ),
-	.mm_master_waitrequest  (mm_master_waitrequest  )
+	.mm_master_waitrequest  (mm_master_waitrequest  ),
+	.debug_led              (PLL_LOCKED				)
 );
 
 // {ALTERA_IO_END} DO NOT REMOVE THIS LINE!
