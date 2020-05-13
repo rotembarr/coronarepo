@@ -1,54 +1,61 @@
+import aes_pack::*;
+
 module register_controller (
 	input logic clk,
 	input logic rst_n,
 	
-	input 	logic [31:0] 	mm_address,
-	input 	logic [31:0] 	mm_writedata,
-	input 	logic			mm_write,
-	input 	logic 			mm_read,
-	output 	logic [31:0]	mm_readdata,
-	output  logic 			mm_readdatavalid,
-	output  logic 			mm_waitrequest,
+	input 	logic [ADDRESS_SIZE-1:0] 		mm_master_address,
+	input 	logic [REG_SIZE-1:0] 			mm_master_writedata,
+	input 	logic							mm_master_write,
+	input 	logic 							mm_master_read,
+	output 	logic [REG_SIZE-1:0]			mm_master_readdata,
+	output  logic 							mm_master_readdatavalid,
+	output  logic 							mm_master_waitrequest,
 
-	output  logic [7:0] 	msg_words_out,
-	output 	logic 			msg_start,
-	input   logic [7:0]		msg_words_in_remover,
-	input 	logic [7:0] 	msg_words_in_adder
+	output  logic [WORD_COUNTER_SIZE-1:0] 	msg_words_out,
+	output 	logic 							msg_start,
+	input   logic [WORD_COUNTER_SIZE-1:0]	msg_words_in_remover,
+	input 	logic [WORD_COUNTER_SIZE-1:0] 	msg_words_in_adder
 );
 
-localparam int CONF_WORDS_ADDR 	= 'h0;
-localparam int REMOVER_ADDR 	= 'h4;
-localparam int ADDER_ADDR 		= 'h8;
 
 always_ff @(posedge clk or negedge rst_n) begin : proc_sync
 	if(~rst_n) begin
-		msg_words_out <= 0;
-		mm_readdata <= 0;
-		mm_readdatavalid <= 0;
-		mm_waitrequest <= 1;
-		msg_start <= 0;
+		msg_words_out 				<= 1'b0;
+		mm_master_readdata 			<= 1'b0;
+		mm_master_readdatavalid 	<= 1'b0;
+		mm_master_waitrequest 		<= 1'b1;
+		msg_start 					<= 1'b0;
 	end else begin
-		mm_waitrequest <= 0;
-		msg_start <= 0;
-		if (mm_write) begin
-			case (mm_address)
-				CONF_WORDS_ADDR : begin 
-					msg_words_out <= mm_writedata[7:0];
-					msg_start <= 1;
+		// Resets the value when unused
+		mm_master_waitrequest 		<= 1'b0;
+		msg_start 					<= 1'b0;
+		mm_master_readdatavalid 	<= 1'b0;
+		mm_master_readdata 			<= {REG_SIZE{1'b0}};
+
+		// If write request
+		if (mm_master_write) begin
+			// Address switch case
+			case (mm_master_address)
+				MSG_WORD_CNT : begin // Signals the word generator to start working with the given size
+					msg_words_out 	<= mm_master_writedata[WORD_COUNTER_SIZE-1:0];
+					msg_start 		<= 1'b1;
 				end
-				default : mm_waitrequest <= 1;
+				// Asks for wait one clock
+				default : mm_master_waitrequest <= 1'b1; // Should not happen
 			endcase
 		end
-		mm_readdatavalid <= 0;
-		mm_readdata <= 0;
-		if (mm_read) begin
-			case (mm_address)
-				CONF_WORDS_ADDR : 	mm_readdata <= {24'b0, msg_words_out};
-				REMOVER_ADDR 	: 	mm_readdata <= {24'b0, msg_words_in_remover};
-				ADDER_ADDR 		: 	mm_readdata <= {24'b0, msg_words_in_adder};
-				default :  			mm_readdata <= {32{1'b1}};
+		// If read request
+		if (mm_master_read) begin
+			// Address switch case
+			case (mm_master_address)
+				MSG_WORD_CNT 		: 	mm_master_readdata <= {24'b0, msg_words_out};
+				REMOVER_WORD_CNT 	: 	mm_master_readdata <= {24'b0, msg_words_in_remover};
+				ADDER_WORD_CNT 		: 	mm_master_readdata <= {24'b0, msg_words_in_adder};
+				default 			:  	mm_master_readdata <= {32{1'b1}};
 			endcase
-			mm_readdatavalid <= 1;
+			// In every case of read, return valid so the system console wont get stuck.
+			mm_master_readdatavalid <= 1'b1;
 		end
 	end
 end

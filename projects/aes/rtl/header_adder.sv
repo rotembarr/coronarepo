@@ -8,22 +8,14 @@ module header_adder #(
 	input logic clk,
 	input logic rst_n,
 	
-	input logic [DATA_WIDTH-1:0] data_in_data,
-	input logic data_in_valid,
-	input logic data_in_sop,
-	input logic data_in_eop,
-	input logic [$clog2(DATA_WIDTH/8)-1:0] data_in_empty,
-	output logic data_in_ready,
+	avalon_st_if.slave data_in,
  	input logic [HEADER_SIZE-1:0] header_data,
-	output logic data_out_valid,
-	output logic data_out_sop,
-	output logic data_out_eop,
-	output logic [DATA_WIDTH-1:0] data_out_data,
-	output logic [$clog2(DATA_WIDTH/8)-1:0] data_out_empty,
-	input logic data_out_ready
+ 	avalon_st_if.master data_out
 );
 
-logic [$clog2(HEADER_SIZE/DATA_WIDTH):0] header_cntr;
+localparam int HEADER_WORD_COUNT = HEADER_SIZE/DATA_WIDTH;
+
+logic [$clog2(HEADER_WORD_COUNT):0] header_cntr;
 
 typedef enum int {
 	IDLE_ST,
@@ -33,22 +25,25 @@ typedef enum int {
 
 mod_st curr_st;
 
-logic [DATA_WIDTH-1:0] header_sep [HEADER_SIZE/DATA_WIDTH-1:0];
+// Header seperate to words
+logic [DATA_WIDTH-1:0] header_sep [HEADER_WORD_COUNT-1:0];
+
 genvar i;
 generate
-	for (i = 0; i < HEADER_SIZE/DATA_WIDTH; i++) begin : sep_gen
+	for (i = 0; i < HEADER_WORD_COUNT; i++) begin : sep_gen
+		// Seperates each word in the header
 		assign header_sep[i] = header_data[HEADER_SIZE-(DATA_WIDTH * i)-1:HEADER_SIZE-(DATA_WIDTH * (i+1))];
 	end
 endgenerate
 
-assign data_out_valid = data_in_valid;
+assign data_out.valid = data_in.valid;
 
 always_comb begin : proc_async
-	data_out_sop 	= (curr_st == IDLE_ST); // Sop always on, until state changes
-	data_out_eop 	= (curr_st == DATA_ST & data_in_eop); // Eop when data eop
-	data_out_data 	= (curr_st == DATA_ST) ? data_in_data : header_sep[header_cntr];
-	data_out_empty  = (data_out_eop) ? data_in_empty : 'b0; // Should be 0 unless given value at eop
-	data_in_ready 	= (curr_st == DATA_ST) & data_out_ready;
+	data_out.sop 	= (curr_st == IDLE_ST); // Sop always on, until state changes
+	data_out.eop 	= (curr_st == DATA_ST & data_in.eop); // Eop when data eop
+	data_out.data 	= (curr_st == DATA_ST) ? data_in.data : header_sep[header_cntr];
+	data_out.empty  = (data_out.eop) ? data_in.empty : 'b0; // Should be 0 unless given value at eop
+	data_in.ready 	= (curr_st == DATA_ST) & data_out.ready;
 end
 
 always_ff @(posedge clk or negedge rst_n) begin : proc_sync
@@ -58,7 +53,7 @@ always_ff @(posedge clk or negedge rst_n) begin : proc_sync
 	end else begin
 		case (curr_st)
 			IDLE_ST : begin
-				if (data_out_valid & data_out_ready) begin
+				if (data_out.valid & data_out.ready) begin
 					if (HEADER_SIZE == DATA_WIDTH) begin
 						curr_st <= DATA_ST;
 					end else begin
@@ -68,19 +63,19 @@ always_ff @(posedge clk or negedge rst_n) begin : proc_sync
 				end
 			end
 			HEADER_ST : begin
-				if ((header_cntr < (HEADER_SIZE/DATA_WIDTH) - 1) & (data_out_valid & data_out_ready)) begin
+				if ((header_cntr < (HEADER_SIZE/DATA_WIDTH) - 1) & (data_out.valid & data_out.ready)) begin
 					header_cntr <= header_cntr + 1;
 				end else begin
 					curr_st <= DATA_ST;
 				end
 			end
 			DATA_ST : begin
-				if (data_in_eop & data_in_valid & data_in_ready) begin
+				if (data_in.eop & data_in.valid & data_in.ready) begin
 					curr_st 	<= IDLE_ST;
 					header_cntr <= 0;
 				end
 			end
-			default : begin data_in_ready <= 0; end // Should not happen ever
+			default : begin data_in.ready <= 0; end // Should not happen ever
 		endcase
 	end
 end

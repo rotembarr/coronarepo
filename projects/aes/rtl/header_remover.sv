@@ -16,7 +16,7 @@ module header_remover (
 
 logic [$clog2(HEADER_SIZE/DATA_WIDTH):0] header_cntr;
 
-enum int {
+typedef enum int {
 	HEADER_ST,
 	DATA_ST 
 } mod_st;
