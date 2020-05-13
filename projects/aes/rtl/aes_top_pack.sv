@@ -1,4 +1,4 @@
-package aes_pack;
+package aes_top_pack;
 
 	// Registers addresses
 	localparam int PERIPHERAL_ADDR 		= 'h1000; 	// The base for the peripheral addresses

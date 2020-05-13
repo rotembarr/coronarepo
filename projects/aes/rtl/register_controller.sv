@@ -1,4 +1,4 @@
-import aes_pack::*;
+import aes_top_pack::*;
 
 module register_controller (
 	input logic clk,

@@ -1,7 +1,7 @@
 // Module acts as a replacement to the verilog top, to allow interfaces
 // and easier control
 
-import aes_pack::*;
+import aes_top_pack::*;
 
 module aes_sv_top (
 	// General
