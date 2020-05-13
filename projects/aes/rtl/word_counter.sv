@@ -1,23 +1,26 @@
+import aes_top_pack::*;
+
 module word_counter (
 	input logic clk,
 	input logic rst_n,
 	
-	input logic msg_in_valid,
-	input logic msg_in_sop,
-	output logic msg_in_ready,
-	output logic [7:0] cntr
+	avalon_st_if.slave msg_in,
+
+	output logic [WORD_COUNTER_SIZE-1:0] cntr
 );
 
-assign msg_in_ready = 1;
+assign msg_in.ready = 1; // Always ready
 
 always_ff @(posedge clk or negedge rst_n) begin : proc_sync
 	if(~rst_n) begin
-		cntr <= 0;
+		cntr <= {WORD_COUNTER_SIZE{1'b0}};
 	end else begin
-		if (msg_in_valid & msg_in_sop) begin
-			cntr <= 1;
-		end else if (msg_in_valid) begin
-			cntr <= cntr + 1;
+		// Resets the counter
+		if (msg_in.valid & msg_in.sop) begin
+			cntr <= {{WORD_COUNTER_SIZE-1{1'b0}, 1'b1};
+		// Increases the counter
+		end else if (msg_in.valid) begin
+			cntr <= cntr + 1'b1;
 		end
 	end
 end
