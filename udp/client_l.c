@@ -25,11 +25,6 @@ int main()
 	// This string will hold the key for the AES encryption
 	char* enc_key_str = "1111111111111111\0";
 
-	// A variable for the buffer to receive data from the server 
-	char* buff;
-	buff = (char*) malloc(BUFF_LEN*sizeof(char));
-	memset(buff, '\0', BUFF_LEN);
-
 	// A variable for the data to get from the user to send to the server
 	char* message;
 	message = (char*) malloc(BUFF_LEN*sizeof(char));
@@ -40,11 +35,7 @@ int main()
 	message_enc = (char*) malloc(BUFF_LEN*sizeof(char));
 	memset(message_enc, '\0', BUFF_LEN);
 
-	// A variable for the buffer to receive data from the server 
-	char* message_dec;
-	message_dec = (char*) malloc(BUFF_LEN*sizeof(char));
-	memset(message_dec, '\0', BUFF_LEN);
-
+	// The size of server_addr struct
 	slen = sizeof(server_addr);
 
 	// Get the ip address of the server
@@ -88,20 +79,6 @@ int main()
 	uint8_t* enc_message_aux;
 	enc_message_aux = (uint8_t*) malloc(BUFF_LEN*sizeof(uint8_t));
 	memset(enc_message_aux, '\0', BUFF_LEN);
-
-	// Auxiliary variables for the decryption process (data from the server)
-	// data_to_dec will hold each 16 bytes to decrypt for each encryption process
-	char* data_to_dec;
-	data_to_dec = (char*) malloc(17*sizeof(char));
-	memset(data_to_dec, '\0', 17);
-
-	// This varaible will point to the encrypted data in uint8_t type
-	uint8_t* aux_dec;
-
-	// Will hold the whole message encrypted in uint8_t type
-	uint8_t* dec_message_aux;
-	dec_message_aux = (uint8_t*) malloc(BUFF_LEN*sizeof(uint8_t));
-	memset(dec_message_aux, '\0', BUFF_LEN);
 	
 	// Start the communication
 	while(strcmp("exit\n", message) & strcmp("quit\n", message) & strcmp("exit\0", message) & strcmp("quit\0", message))
@@ -144,61 +121,13 @@ int main()
 			exit(EXIT_FAILURE);
 		}
 		
-		// Receive a reply and print it
-		// Clear the buffer by filling null, it might have previously received data
-		memset(buff, '\0', BUFF_LEN);
-
-		// Try to receive some data, this is a blocking call
-		if (recvfrom(socket_id, buff, BUFF_LEN, 0, (struct sockaddr *) &server_addr, &slen) < 0)
-		{
-			perror("recvfrom() failed.");
-			exit(EXIT_FAILURE);
-		}
-
-		printf("Data encrypted: %s\n" , buff);
-
-		// Decrypt the message
-		// Number of 16-bytes iterartions needed for the AES process
-		int num_decryptions = (int) ceil((double)strlen(buff)/16.0);
-
-		// Setting the memory
-		memset(data_to_dec, 	'\0', 17);
-		memset(message_dec, 	'\0', BUFF_LEN);
-		memset(dec_message_aux, '\0', BUFF_LEN);
-
-		// Decrypt for each process of 16-byte
-		for (int i = 0; i < num_decryptions; i++)
-		{
-			memcpy(data_to_dec, buff+16*i*sizeof(char), 16*sizeof(char));
-			data_to_dec[16] = '\0';
-			aux_dec = aes_dec_128bits(data_to_dec, enc_key_str);
-			// Check if the decryption failed
-			if (aux_dec == NULL){
-				return 1;
-			}
-			memcpy(dec_message_aux+16*i*sizeof(char), aux_dec, 16*sizeof(uint8_t));
-			free(aux_dec);
-		}
-
-		// Casting the message to chars
-		for (int i = 0; i < num_decryptions*16+1; i++)
-    	{
-        	message_dec[i] = (char)dec_message_aux[i];
-    	}
-		
-		// Print the received data
-		puts(message_dec);
 	}
 
 	// Free the memory
-	free(buff);
 	free(message);
 	free(message_enc);
-	free(message_dec);
 	free(data_to_enc);
-	free(data_to_dec);
 	free(enc_message_aux);
-	free(dec_message_aux);
 
 	// Close the socket
 	close(socket_id);
