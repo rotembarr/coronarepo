@@ -1,6 +1,6 @@
 // Include the libraries
-#include "udp_lib.c"
-#include "aes_ni.c"
+#include "../lib/udp_lib.c"
+#include "../lib/aes_ni.c"
 #include <stdio.h> 
 #include <stdlib.h> 
 #include <unistd.h> 
