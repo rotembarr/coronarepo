@@ -105,6 +105,8 @@ always_ff @(posedge clk or negedge rst_n) begin : proc_sync
 	end
 end
 
+assign debug_led = ~addr_drop;
+
 msg_dropper addr_checker (
 	.clk(clk),
 	.rst_n(rst_n),

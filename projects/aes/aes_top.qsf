@@ -230,5 +230,5 @@ set_global_assignment -name SYSTEMVERILOG_FILE ../general/rtl/msg_dropper.sv
 set_global_assignment -name SYSTEMVERILOG_FILE ../general/rtl/header_remover.sv
 set_global_assignment -name SYSTEMVERILOG_FILE ../general/rtl/header_adder.sv
 set_global_assignment -name SYSTEMVERILOG_FILE ../general/rtl/avalon_st_if.sv
-set_global_assignment -name SLD_FILE db/signaltap_auto_stripped.stp
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
+set_global_assignment -name SLD_FILE db/signaltap_auto_stripped.stp
