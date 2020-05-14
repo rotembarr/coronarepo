@@ -80,6 +80,7 @@ assign PC_PHY_RESETn  = PB_RESETn;
 	wire mm_out_read;
 	wire clk;
 
+
 one_mac i_one_mac (
 	.eth_net_conn_rxp              (NET_SGMII_RX                  ),
 	.eth_net_conn_txp              (NET_SGMII_TX                  ),
@@ -112,10 +113,10 @@ one_mac i_one_mac (
 	.mm_out_read                   (mm_out_read                   ),
 	.mm_out_byteenable             (                              ),
 	.mm_out_debugaccess            (                              ),
-	.ref_clk_clk                   (XCVR_REFCLK_125               ),
 	.reset_reset_n                 (PB_RESETn                     ),
-	.out_pll_outclk0_clk           (clk           ),
-	.out_pll_refclk_clk            (XCVR_REFCLK_125	            )
+	.out_pll_outclk0_clk           (clk                           ),
+	.out_pll_refclk_clk            (XCVR_REFCLK_125               ),
+	.clk_clk                       (XCVR_REFCLK_125)
 );
 
 
