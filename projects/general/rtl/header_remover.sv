@@ -72,6 +72,7 @@ always_ff @(posedge clk or negedge rst_n) begin : proc_sync
 					curr_st 		<= DATA_ST;
 					data_out.sop 	<= 1'b1;
 					header_valid 	<= 1'b1;
+					header_cntr 	<= {$bits(header_cntr){1'b0}};
 				end
 			end
 			DATA_ST : begin
