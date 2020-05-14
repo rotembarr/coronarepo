@@ -1,26 +1,21 @@
 // Include the libraries
-#include "udp_lib.c"
-#include "aes_ni.c"
-#include <stdio.h> 
-#include <stdlib.h> 
-#include <unistd.h> 
-#include <string.h> 
-#include <sys/types.h> 
-#include <sys/socket.h> 
-#include <arpa/inet.h> 
-#include <netinet/in.h>
+#include "../lib/udp_lib.c"
+#include "../lib/aes_ni.c"
+#include <stdio.h>
+#include <winsock2.h>
 #include <math.h>
 
 // The compilation line is:
-// gcc -std=c99 server_l.c -o server -g -O0 -Wall -msse2 -msse -march=native -maes -lm
+// gcc server_w.c -o server -g -O0 -Wall -msse2 -msse -march=native -maes -l ws2_32
 
 int main()
 {
 	struct sockaddr_in server_addr, client_addr;
 	int socket_id;
-	unsigned int slen, recv_len;
+	int slen, recv_len;
 	char server_ip[IP_LEN];
 	int port_num;
+	WSADATA wsa;
 
 	// This string will hold the key for the AES encryption
 	char* enc_key_str = "1111111111111111\0";
@@ -34,14 +29,15 @@ int main()
     }
 	memset(buff, '\0', BUFF_LEN);
 
+	// The size of server_addr struct
 	slen = sizeof(client_addr);
 
 	// Get the ip address of the server
 	printf("Please enter the IP server:\n");
-	fgets(server_ip, IP_LEN, stdin);
+	gets(server_ip);
 	while(!valid_ip(server_ip)) {
 		printf("Please enter a valid IP address:\n");
-		fgets(server_ip, IP_LEN, stdin);
+		gets(server_ip);
 	}
 
 	// Get the port number (assuming the input is an integer)
@@ -52,26 +48,31 @@ int main()
 		scanf("%d", &port_num);
 	}
 	
+	// Initialize winsock
+	printf("\nInitializing Winsock...");
+	if (WSAStartup(MAKEWORD(2,2),&wsa) != 0)
+	{
+		printf("Failed. Error Code : %d", WSAGetLastError());
+		exit(EXIT_FAILURE);
+	}
+	printf("Initialized.\n");
+	
 	// Create the socket
-	if((socket_id = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
-		perror("Socket creation failed.");
-        exit(EXIT_FAILURE);
+	if((socket_id = socket(AF_INET, SOCK_DGRAM, 0)) == INVALID_SOCKET)
+	{
+		printf("Could not create socket : %d" , WSAGetLastError());
 	}
 	printf("Socket created.\n");
-
-	// Cleaning the memory of the sockaddr_in
-	memset(&server_addr, '\0', sizeof(server_addr));
-	memset(&client_addr, '\0', sizeof(client_addr));
 	
 	// Setup address structure
 	server_addr.sin_family = AF_INET;
-	server_addr.sin_addr.s_addr = inet_addr(server_ip);
+	server_addr.sin_addr.S_un.S_addr = inet_addr(server_ip);
 	server_addr.sin_port = htons(port_num);
 	
 	// Bind
-	if (bind(socket_id, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0)	{
-		perror("Bind failed."); 
-        exit(EXIT_FAILURE); 
+	if (bind(socket_id, (struct sockaddr *)&server_addr, sizeof(server_addr)) == SOCKET_ERROR)	{
+		printf("Bind failed with error code : %d" , WSAGetLastError());
+		exit(EXIT_FAILURE);
 	}
 	puts("Bind done");
 
@@ -134,7 +135,7 @@ int main()
 	memset(enc_message_aux, '\0', BUFF_LEN);
 
 	// Start the communication, listening to data
-	while(strcmp("exit\n", dec_message) & strcmp("exit\0", dec_message))
+	while(strcmp("exit\0", dec_message))
 	{
 		printf("Waiting for data...");
 		fflush(stdout);
@@ -143,11 +144,11 @@ int main()
 		memset(buff, '\0', BUFF_LEN);
 		
 		// Try to receive some data, this is a blocking call
-		if ((recv_len = recvfrom(socket_id, buff, BUFF_LEN, 0, (struct sockaddr *) &client_addr, &slen)) < 0) {
-			perror("recvfrom() failed.");
+		if ((recv_len = recvfrom(socket_id, buff, BUFF_LEN, 0, (struct sockaddr *) &client_addr, &slen)) == SOCKET_ERROR) {
+			printf("recvfrom() failed with error code : %d" , WSAGetLastError());
 			exit(EXIT_FAILURE);
 		}
-
+		
 		printf("Data encrypted: %s\n" , buff);
 
 		// Decrypt the message
@@ -212,10 +213,10 @@ int main()
     	{
         	enc_message[i] = (char)enc_message_aux[i];
     	}
-		
+
 		// Now reply the client with the same data
-		if (sendto(socket_id, enc_message, recv_len, 0, (struct sockaddr*) &client_addr, slen) < 0) {
-			printf("sendto() failed.");
+		if (sendto(socket_id, enc_message, recv_len, 0, (struct sockaddr*) &client_addr, slen) == SOCKET_ERROR) {
+			printf("sendto() failed with error code : %d" , WSAGetLastError());
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -230,7 +231,8 @@ int main()
 	free(dec_message_aux);
 
 	// Close the socket
-	close(socket_id);
+	closesocket(socket_id);
+	WSACleanup();
 	
 	return 0;
 }

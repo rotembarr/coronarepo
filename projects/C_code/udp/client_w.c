@@ -1,26 +1,20 @@
 // Include the libraries
-#include "udp_lib.c"
-#include "aes_ni.c"
-#include <stdio.h> 
-#include <stdlib.h> 
-#include <unistd.h> 
-#include <string.h> 
-#include <sys/types.h> 
-#include <sys/socket.h> 
-#include <arpa/inet.h> 
-#include <netinet/in.h> 
+#include "../lib/udp_lib.c"
+#include "../lib/aes_ni.c"
+#include <stdio.h>
+#include <winsock2.h>
 #include <math.h>
 
 // The compilation line is:
-// gcc -std=c99 client_l.c -o client -g -O0 -Wall -msse2 -msse -march=native -maes -lm
+// gcc client_w.c -o client -g -O0 -Wall -msse2 -msse -march=native -maes -l ws2_32
 
 int main()
 {
 	struct sockaddr_in server_addr;
-	int socket_id;
-	unsigned int slen;
+	int socket_id, slen;
 	char server_ip[IP_LEN];
 	int port_num;
+	WSADATA wsa;
 
 	// This string will hold the key for the AES encryption
 	char* enc_key_str = "1111111111111111\0";
@@ -45,14 +39,15 @@ int main()
 	message_dec = (char*) malloc(BUFF_LEN*sizeof(char));
 	memset(message_dec, '\0', BUFF_LEN);
 
+	// The size of server_addr struct
 	slen = sizeof(server_addr);
 
 	// Get the ip address of the server
 	printf("Please enter the IP server:\n");
-	fgets(server_ip, IP_LEN, stdin);
+	gets(server_ip);
 	while(!valid_ip(server_ip)) {
 		printf("Please enter a valid IP address:\n");
-		fgets(server_ip, IP_LEN, stdin);
+		gets(server_ip);
 	}
 
 	// Get the port number (assuming the input is an integer)
@@ -62,18 +57,26 @@ int main()
 		printf("Please enter a valid port number:\n");
 		scanf("%d", &port_num);
 	}
+
+	// Initialize winsock
+	printf("\nInitializing Winsock...");
+	if (WSAStartup(MAKEWORD(2,2), &wsa) != 0) {
+		printf("Failed. Error Code : %d",WSAGetLastError());
+		exit(EXIT_FAILURE);
+	}
+	printf("Initialized.\n");
 	
 	// Create the socket
-	if ((socket_id=socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
-		printf("socket() failed.");
+	if ((socket_id=socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == SOCKET_ERROR) {
+		printf("socket() failed with error code : %d" , WSAGetLastError());
 		exit(EXIT_FAILURE);
 	}
 	
 	// Setup address structure
-	memset(&server_addr, '\0', sizeof(server_addr));
+	memset((char *) &server_addr, 0, sizeof(server_addr));
 	server_addr.sin_family = AF_INET;
 	server_addr.sin_port = htons(port_num);
-	server_addr.sin_addr.s_addr = inet_addr(server_ip);
+	server_addr.sin_addr.S_un.S_addr = inet_addr(server_ip);
 
 	// Auxiliary variables for the encryption process (data to the server)
 	// data_to_enc will hold each 16 bytes to encrypt for each encryption process
@@ -102,13 +105,13 @@ int main()
 	uint8_t* dec_message_aux;
 	dec_message_aux = (uint8_t*) malloc(BUFF_LEN*sizeof(uint8_t));
 	memset(dec_message_aux, '\0', BUFF_LEN);
-	
+
 	// Start the communication
-	while(strcmp("exit\n", message) & strcmp("quit\n", message) & strcmp("exit\0", message) & strcmp("quit\0", message))
+	while(strcmp("exit", message) & strcmp("quit", message))
 	{
 		printf("Enter message :\n");
-		fgets(message, BUFF_LEN, stdin);
-
+		gets(message);
+		
 		// Encryption process
 		// Number of 16-bytes iterartions needed for the AES process
 		int num_encryptions = (int) ceil((double)strlen(message)/16.0);
@@ -137,21 +140,21 @@ int main()
     	{
         	message_enc[i] = (char)enc_message_aux[i];
     	}
-		
+
 		// Send the message to the server
-		if (sendto(socket_id, message_enc, strlen(message_enc) ,0 , (struct sockaddr *) &server_addr, slen) < 0) {
-			perror("sendto() failed.");
+		if (sendto(socket_id, message_enc, strlen(message_enc) ,0 , (struct sockaddr *) &server_addr, slen) == SOCKET_ERROR) {
+			printf("sendto() failed with error code : %d" , WSAGetLastError());
 			exit(EXIT_FAILURE);
 		}
 		
 		// Receive a reply and print it
 		// Clear the buffer by filling null, it might have previously received data
-		memset(buff, '\0', BUFF_LEN);
+		memset(buff,'\0', BUFF_LEN);
 
 		// Try to receive some data, this is a blocking call
-		if (recvfrom(socket_id, buff, BUFF_LEN, 0, (struct sockaddr *) &server_addr, &slen) < 0)
+		if (recvfrom(socket_id, buff, BUFF_LEN, 0, (struct sockaddr *) &server_addr, &slen) == SOCKET_ERROR)
 		{
-			perror("recvfrom() failed.");
+			printf("recvfrom() failed with error code : %d" , WSAGetLastError());
 			exit(EXIT_FAILURE);
 		}
 
@@ -201,7 +204,8 @@ int main()
 	free(dec_message_aux);
 
 	// Close the socket
-	close(socket_id);
+	closesocket(socket_id);
+	WSACleanup();
 
 	return 0;
 }
