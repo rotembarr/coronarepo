@@ -19,7 +19,13 @@ package aes_top_pack;
 
 	// General
 	localparam int AES_DATA_WIDTH 		= 128;
+
+	// Mac
 	localparam int MAC_ADDR_WIDTH	 	= 48;
+	localparam int MAC_HEADER_WIDTH		= 128;
+	localparam int MAC_ADDR_PAD 		= 16;
+	localparam logic [15:0] ETH_TYPE  	= 16'h0800;
+
 	localparam int IP_HEADER_WIDTH 		= 160;
 
 	localparam int MAC_STREAM_WIDTH 	= 32; 		// DO NOT CHANGE, from the tse ip core 

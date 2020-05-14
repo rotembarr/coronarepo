@@ -64,7 +64,7 @@ module aes_sv_top (
 	logic addr_drop;
 
 	// Modules output
-	logic [MAC_ADDR_WIDTH*2-1:0] input_mac_addr;
+	logic [MAC_HEADER_WIDTH-1:0] input_mac_addr;
 	logic [MAC_ADDR_WIDTH-1:0]   input_mac_dst;
 	logic mac_addr_valid;
 	logic wrong_addr;
@@ -85,7 +85,7 @@ register_controller aes_register_controller (
 
 header_remover #(
 	.DATA_WIDTH(MAC_STREAM_WIDTH),
-	.HEADER_SIZE(MAC_ADDR_WIDTH*2)
+	.HEADER_SIZE(MAC_HEADER_WIDTH)
 ) mac_header_remover (
 	.clk(clk),
 	.rst_n(rst_n),
@@ -95,7 +95,7 @@ header_remover #(
 	.data_out(removed_ether_st)
 );
 
-assign input_mac_dst = input_mac_addr[MAC_ADDR_WIDTH*2-1:MAC_ADDR_WIDTH];
+assign input_mac_dst = input_mac_addr[MAC_HEADER_WIDTH-MAC_ADDR_PAD-1:MAC_HEADER_WIDTH-MAC_ADDR_PAD-MAC_ADDR_WIDTH];
 
 always_ff @(posedge clk or negedge rst_n) begin : proc_sync
 	if(~rst_n) begin
@@ -121,12 +121,12 @@ msg_dropper addr_checker (
 
 header_adder #(
 	.DATA_WIDTH(MAC_STREAM_WIDTH),
-	.HEADER_SIZE(MAC_ADDR_WIDTH*2)
+	.HEADER_SIZE(MAC_HEADER_WIDTH)
 ) mac_header_adder (
 	.clk(clk),
 	.rst_n(rst_n),
 	.data_in(msg_here),
-	.header_data({dest_mac_addr, source_mac_addr}),
+	.header_data({{MAC_ADDR_PAD{1'b0}},dest_mac_addr, source_mac_addr, ETH_TYPE}),
 	.data_out(transmit_st)
 );
 
