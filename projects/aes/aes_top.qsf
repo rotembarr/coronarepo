@@ -117,18 +117,6 @@ set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_RAM_PIPELINE=0" -
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_COUNTER_PIPELINE=0" -section_id auto_signaltap_0
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_TRIGGER_LEVEL_PIPELINE=1" -section_id auto_signaltap_0
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_ENABLE_ADVANCED_TRIGGER=1" -section_id auto_signaltap_0
-set_global_assignment -name SYSTEMVERILOG_FILE rtl/aes_ebc.sv
-set_global_assignment -name QSYS_FILE qsys/one_mac.qsys
-set_global_assignment -name SYSTEMVERILOG_FILE rtl/header_remover.sv
-set_global_assignment -name SYSTEMVERILOG_FILE rtl/aes_top_pack.sv
-set_global_assignment -name SYSTEMVERILOG_FILE rtl/aes_sv_top.sv
-set_global_assignment -name SYSTEMVERILOG_FILE rtl/word_generator.sv
-set_global_assignment -name SYSTEMVERILOG_FILE rtl/word_counter.sv
-set_global_assignment -name SYSTEMVERILOG_FILE rtl/register_controller.sv
-set_global_assignment -name VERILOG_FILE rtl/aes_top.v
-set_global_assignment -name SYSTEMVERILOG_FILE rtl/header_adder.sv
-set_global_assignment -name SYSTEMVERILOG_FILE ../general/rtl/avalon_st_if.sv
-set_global_assignment -name SIGNALTAP_FILE rtl/signaltap.stp
 set_global_assignment -name OPTIMIZATION_MODE "AGGRESSIVE PERFORMANCE"
 set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT crc[1] -to auto_signaltap_0|gnd -section_id auto_signaltap_0
 set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT crc[2] -to auto_signaltap_0|vcc -section_id auto_signaltap_0
@@ -234,3 +222,13 @@ set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT crc[22] -
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_ADVANCED_TRIGGER_ENTITY=sld_reserved_aes_auto_signaltap_0_1_7308," -section_id auto_signaltap_0
 set_global_assignment -name SLD_FILE db/signaltap_auto_stripped.stp
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
+set_global_assignment -name QSYS_FILE qsys/one_mac.qsys
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/register_controller.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/aes_top_pack.sv
+set_global_assignment -name VERILOG_FILE rtl/aes_top.v
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/aes_sv_top.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/aes_ebc.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../general/rtl/msg_dropper.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../general/rtl/header_remover.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../general/rtl/header_adder.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../general/rtl/avalon_st_if.sv
