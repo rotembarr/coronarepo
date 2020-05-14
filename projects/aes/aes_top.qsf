@@ -89,17 +89,6 @@ set_instance_assignment -name IO_STANDARD "1.5-V PCML" -to NET_SGMII_TX
 set_instance_assignment -name IO_STANDARD "1.5-V PCML" -to NET_SGMII_RX
 set_global_assignment -name ENABLE_SIGNALTAP ON
 set_global_assignment -name USE_SIGNALTAP_FILE rtl/signaltap.stp
-set_global_assignment -name SYSTEMVERILOG_FILE rtl/header_remover.sv
-set_global_assignment -name SYSTEMVERILOG_FILE rtl/aes_top_pack.sv
-set_global_assignment -name SYSTEMVERILOG_FILE rtl/aes_sv_top.sv
-set_global_assignment -name SYSTEMVERILOG_FILE rtl/word_generator.sv
-set_global_assignment -name SYSTEMVERILOG_FILE rtl/word_counter.sv
-set_global_assignment -name SYSTEMVERILOG_FILE rtl/register_controller.sv
-set_global_assignment -name QSYS_FILE qsys/jtag_to_mm.qsys
-set_global_assignment -name VERILOG_FILE rtl/aes_top.v
-set_global_assignment -name SYSTEMVERILOG_FILE rtl/header_adder.sv
-set_global_assignment -name SYSTEMVERILOG_FILE ../general/rtl/avalon_st_if.sv
-set_global_assignment -name SIGNALTAP_FILE rtl/signaltap.stp
 set_global_assignment -name SLD_NODE_CREATOR_ID 110 -section_id auto_signaltap_0
 set_global_assignment -name SLD_NODE_ENTITY_NAME sld_signaltap -section_id auto_signaltap_0
 set_instance_assignment -name CONNECT_TO_SLD_NODE_ENTITY_PORT acq_clk -to XCVR_REFCLK_125 -section_id auto_signaltap_0
@@ -246,5 +235,18 @@ set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_COUNTER_PIPELINE=
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_ADVANCED_TRIGGER_ENTITY=sld_reserved_aes_auto_signaltap_0_1_c980," -section_id auto_signaltap_0
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_TRIGGER_LEVEL_PIPELINE=1" -section_id auto_signaltap_0
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_ENABLE_ADVANCED_TRIGGER=1" -section_id auto_signaltap_0
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/aes_ebc.sv
+set_global_assignment -name QSYS_FILE qsys/one_mac.qsys
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/header_remover.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/aes_top_pack.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/aes_sv_top.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/word_generator.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/word_counter.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/register_controller.sv
+set_global_assignment -name VERILOG_FILE rtl/aes_top.v
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/header_adder.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../general/rtl/avalon_st_if.sv
+set_global_assignment -name SIGNALTAP_FILE rtl/signaltap.stp
+set_global_assignment -name OPTIMIZATION_MODE "AGGRESSIVE PERFORMANCE"
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
 set_global_assignment -name SLD_FILE db/signaltap_auto_stripped.stp
