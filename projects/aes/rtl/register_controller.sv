@@ -12,8 +12,8 @@ module register_controller (
 	output  logic 							mm_master_readdatavalid,
 	output  logic 							mm_master_waitrequest,
 
-	input 	logic [REG_SIZE-1:0] 			header_first_word,
-	input 	logic [REG_SIZE-1:0] 			header_last_word
+	output 	logic [MAC_ADDR_WIDTH-1:0] 	source_mac_addr,
+	output 	logic [MAC_ADDR_WIDTH-1:0] 	dest_mac_addr
 );
 
 
@@ -22,29 +22,36 @@ always_ff @(posedge clk or negedge rst_n) begin : proc_sync
 		mm_master_readdata 			<= 1'b0;
 		mm_master_readdatavalid 	<= 1'b0;
 		mm_master_waitrequest 		<= 1'b1;
+		source_mac_addr 			<= {MAC_ADDR_WIDTH{1'b0}};
+		dest_mac_addr 				<= {MAC_ADDR_WIDTH{1'b0}};
 	end else begin
 		// Resets the value when unused
 		mm_master_waitrequest 		<= 1'b0;
 		mm_master_readdatavalid 	<= 1'b0;
 		mm_master_readdata 			<= {REG_SIZE{1'b0}};
 
-		/*
 		// If write request
 		if (mm_master_write) begin
 			// Address switch case
 			case (mm_master_address)
+				SOURCE_MAC_ADDR_1 	: source_mac_addr[MAC_ADDR_WIDTH-1:MAC_ADDR_WIDTH-REG_SIZE] <= mm_master_writedata[MAC_ADDR_WIDTH-REG_SIZE-1:0];
+				SOURCE_MAC_ADDR_2 	: source_mac_addr[REG_SIZE-1:0] 							<= mm_master_writedata;
+				DEST_MAC_ADDR_1 	: dest_mac_addr[MAC_ADDR_WIDTH-1:MAC_ADDR_WIDTH-REG_SIZE] 	<= mm_master_writedata[MAC_ADDR_WIDTH-REG_SIZE-1:0];
+				DEST_MAC_ADDR_2 	: dest_mac_addr[REG_SIZE-1:0] 								<= mm_master_writedata;
 				// Asks for wait one clock
-				default : mm_master_waitrequest <= 1'b1; // Should not happen
+				default 			: mm_master_waitrequest <= 1'b1; // Non existent address
 			endcase
 		end
-		*/
+		
 		// If read request
 		if (mm_master_read) begin
 			// Address switch case
 			case (mm_master_address)
-				FIRST_HEADER_ADDR	: 	mm_master_readdata <= header_first_word;
-				LAST_HEADER_ADDR 	: 	mm_master_readdata <= header_last_word;
-				default 			:  	mm_master_readdata <= {32{1'b1}};
+				SOURCE_MAC_ADDR_1 	: mm_master_readdata[MAC_ADDR_WIDTH-REG_SIZE-1:0] 	<= source_mac_addr[MAC_ADDR_WIDTH-1:MAC_ADDR_WIDTH-REG_SIZE];
+				SOURCE_MAC_ADDR_2 	: mm_master_readdata 								<= source_mac_addr[REG_SIZE-1:0];
+				DEST_MAC_ADDR_1 	: mm_master_readdata[MAC_ADDR_WIDTH-REG_SIZE-1:0]	<= source_mac_addr[MAC_ADDR_WIDTH-1:MAC_ADDR_WIDTH-REG_SIZE];
+				DEST_MAC_ADDR_2	 	: mm_master_readdata 								<= source_mac_addr[REG_SIZE-1:0];
+				default 			: mm_master_readdata 								<= {32{1'b1}};
 			endcase
 			// In every case of read, return valid so the system console wont get stuck.
 			mm_master_readdatavalid <= 1'b1;

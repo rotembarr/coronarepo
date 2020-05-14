@@ -37,75 +37,43 @@ module aes_sv_top (
 	output 	logic 						debug_led
 );
 
-	assign debug_led = 1'b0;
-
-	logic 							header_valid;
-	logic [IP_HEADER_WIDTH-1:0]		header_data;
-	logic [REG_SIZE-1:0] 			header_first_word;
-	logic [REG_SIZE-1:0] 			header_last_word;
-
-	assign header_first_word 	= header_data[IP_HEADER_WIDTH-1:IP_HEADER_WIDTH-REG_SIZE];
-	assign header_last_word 	= header_data[REG_SIZE-1:0];
-
 	// Streams
-	avalon_st_if recieve_st_msg(.clk(clk));
-	avalon_st_if recieve_payload(.clk(clk));
-	avalon_st_if transmit_payload(.clk(clk));
-	avalon_st_if transmit_st_msg(.clk(clk));
+	avalon_st_if recieve_st(.clk(clk));
+	avalon_st_if removed_ether_st(.clk(clk));
+	avalon_st_if transmit_st(.clk(clk));
 
-	assign recieve_st_msg.data 	= recieve_st_data;
-	assign recieve_st_msg.valid = recieve_st_valid;
-	assign recieve_st_msg.sop 	= recieve_st_sop;
-	assign recieve_st_msg.eop 	= recieve_st_eop;
-	assign recieve_st_msg.empty = recieve_st_empty;
-	assign recieve_st_ready 	= recieve_st_msg.ready;
+	// Configs
+	logic [MAC_ADDR_WIDTH-1:0] source_mac_addr;
+	logic [MAC_ADDR_WIDTH-1:0] dest_mac_addr;
 
-	assign transmit_st_data 	= transmit_st_msg.data;
-	assign transmit_st_valid 	= transmit_st_msg.valid;
-	assign transmit_st_sop 		= transmit_st_msg.sop;
-	assign transmit_st_eop 		= transmit_st_msg.eop;
-	assign transmit_st_empty 	= transmit_st_msg.empty;
-	assign transmit_st_msg.ready= transmit_st_ready;
 
-register_controller main_register_controller (
-	.clk                    (clk),
-	.rst_n                  (rst_n),
-	.mm_master_address      (mm_master_address),
-	.mm_master_writedata    (mm_master_writedata),
-	.mm_master_write        (mm_master_write),
-	.mm_master_read         (mm_master_read),
-	.mm_master_readdata     (mm_master_readdata),
+register_controller i_register_controller (
+	.clk                    (clk                    ),
+	.rst_n                  (rst_n                  ),
+	.mm_master_address      (mm_master_address      ),
+	.mm_master_writedata    (mm_master_writedata    ),
+	.mm_master_write        (mm_master_write        ),
+	.mm_master_read         (mm_master_read         ),
+	.mm_master_readdata     (mm_master_readdata     ),
 	.mm_master_readdatavalid(mm_master_readdatavalid),
-	.mm_master_waitrequest  (mm_master_waitrequest),
-	.header_first_word      (header_first_word),
-	.header_last_word       (header_last_word)
+	.mm_master_waitrequest  (mm_master_waitrequest  ),
+	.source_mac_addr        (source_mac_addr        ),
+	.dest_mac_addr          (dest_mac_addr          )
 );
 
-header_remover #(
-	.DATA_WIDTH(MAC_STREAM_WIDTH),
-	.HEADER_SIZE(IP_HEADER_WIDTH)
-) ip_header_remover (
-	.clk         (clk),
-	.rst_n       (rst_n),
-	.data_in     (recieve_st_msg),
-	.header_data (header_data),
+
+	avalon_st_if data_in();
+	logic [MAC_ADDR_WIDTH*2-1:0] header_data;
+	logic header_valid;
+	avalon_st_if data_out();
+header_remover #(.DATA_WIDTH(MAC_STREAM_WIDTH), .HEADER_SIZE(MAC_ADDR_WIDTH*2)) i_header_remover (
+	.clk         (clk         ),
+	.rst_n       (rst_n       ),
+	.data_in     (data_in     ),
+	.header_data (header_data ),
 	.header_valid(header_valid),
-	.data_out    (recieve_payload)
+	.data_out    (data_out    )
 );
-
-aes_ebc i_aes_ebc (.clk(clk), .rst_n(rst_n), .data_in(recieve_payload), .data_out(transmit_payload));
-
-header_adder #(
-	.DATA_WIDTH(MAC_STREAM_WIDTH),
-	.HEADER_SIZE(IP_HEADER_WIDTH)
-) ip_header_adder (
-	.clk        (clk        ),
-	.rst_n      (rst_n      ),
-	.data_in    (transmit_payload),
-	.header_data(header_data),
-	.data_out   (transmit_st_msg)
-);
-
 
 
 endmodule

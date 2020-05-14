@@ -2,8 +2,13 @@ package aes_top_pack;
 
 	// Registers addresses
 	localparam int PERIPHERAL_ADDR 		= 'h1000; 	// The base for the peripheral addresses
-	localparam int FIRST_HEADER_ADDR	= 'h0; 		// The ip header first word
-	localparam int LAST_HEADER_ADDR		= 'h4;		// The ip header last word
+
+	// MAC addresses for the output
+	localparam int SOURCE_MAC_ADDR_1	= 'h0; 		// The MAC source part 1 [47:32]
+	localparam int SOURCE_MAC_ADDR_2	= 'h4;		// The MAC source part 2 [31:0]
+
+	localparam int DEST_MAC_ADDR_1 		= 'h8; 		// Same as the source
+	localparam int DEST_MAC_ADDR_2		= 'hc;
 
 	// Avalon MM parameters
 	localparam int ADDRESS_SIZE 		= 32;
@@ -14,6 +19,7 @@ package aes_top_pack;
 
 	// General
 	localparam int AES_DATA_WIDTH 		= 128;
+	localparam int MAC_ADDR_WIDTH	 	= 48;
 	localparam int IP_HEADER_WIDTH 		= 160;
 
 	localparam int MAC_STREAM_WIDTH 	= 32; 		// DO NOT CHANGE, from the tse ip core 
