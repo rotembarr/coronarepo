@@ -99,7 +99,7 @@ always_ff @(posedge clk or negedge rst_n) begin : proc_sync
 		addr_drop <= 1'b0;
 	end else begin
 		// Checks if the message is for the FPGA
-		if (header_valid) begin
+		if (mac_addr_valid) begin
 			addr_drop <= input_mac_addr[MAC_ADDR_WIDTH*2-1:MAC_ADDR_WIDTH] != source_mac_addr;
 		end
 	end
