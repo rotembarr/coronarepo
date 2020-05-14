@@ -38,10 +38,10 @@ module aes_sv_top (
 );
 
 	// Streams
-	avalon_st_if recieve_st(.clk(clk));
-	avalon_st_if removed_ether_st(.clk(clk));
-	avalon_st_if msg_here(.clk(clk));
-	avalon_st_if transmit_st(.clk(clk));
+	avalon_st_if #(.DATA_WIDTH(MAC_STREAM_WIDTH)) recieve_st(.clk(clk));
+	avalon_st_if #(.DATA_WIDTH(MAC_STREAM_WIDTH)) removed_ether_st(.clk(clk));
+	avalon_st_if #(.DATA_WIDTH(MAC_STREAM_WIDTH)) msg_here(.clk(clk));
+	avalon_st_if #(.DATA_WIDTH(MAC_STREAM_WIDTH)) transmit_st(.clk(clk));
 
 	// Stream assignments
 	assign recieve_st.data 		= recieve_st_data;
@@ -65,10 +65,11 @@ module aes_sv_top (
 
 	// Modules output
 	logic [MAC_ADDR_WIDTH*2-1:0] input_mac_addr;
+	logic [MAC_ADDR_WIDTH-1:0]   input_mac_dst;
 	logic mac_addr_valid;
 	logic wrong_addr;
 
-register_controller i_register_controller (
+register_controller aes_register_controller (
 	.clk(clk),
 	.rst_n(rst_n),
 	.mm_master_address(mm_master_address),
@@ -94,13 +95,15 @@ header_remover #(
 	.data_out(removed_ether_st)
 );
 
+assign input_mac_dst = input_mac_addr[MAC_ADDR_WIDTH*2-1:MAC_ADDR_WIDTH];
+
 always_ff @(posedge clk or negedge rst_n) begin : proc_sync
 	if(~rst_n) begin
 		addr_drop <= 1'b0;
 	end else begin
 		// Checks if the message is for the FPGA
 		if (mac_addr_valid) begin
-			addr_drop <= input_mac_addr[MAC_ADDR_WIDTH*2-1:MAC_ADDR_WIDTH] != source_mac_addr;
+			addr_drop <= input_mac_dst != source_mac_addr;
 		end
 	end
 end

@@ -34,9 +34,9 @@ always_ff @(posedge clk or negedge rst_n) begin : proc_sync
 		if (mm_master_write) begin
 			// Address switch case
 			case (mm_master_address)
-				SOURCE_MAC_ADDR_1 	: source_mac_addr[MAC_ADDR_WIDTH-1:MAC_ADDR_WIDTH-REG_SIZE] <= mm_master_writedata[MAC_ADDR_WIDTH-REG_SIZE-1:0];
+				SOURCE_MAC_ADDR_1 	: source_mac_addr[MAC_ADDR_WIDTH-1:REG_SIZE] <= mm_master_writedata[MAC_ADDR_WIDTH-REG_SIZE-1:0];
 				SOURCE_MAC_ADDR_2 	: source_mac_addr[REG_SIZE-1:0] 							<= mm_master_writedata;
-				DEST_MAC_ADDR_1 	: dest_mac_addr[MAC_ADDR_WIDTH-1:MAC_ADDR_WIDTH-REG_SIZE] 	<= mm_master_writedata[MAC_ADDR_WIDTH-REG_SIZE-1:0];
+				DEST_MAC_ADDR_1 	: dest_mac_addr[MAC_ADDR_WIDTH-1:REG_SIZE] 	<= mm_master_writedata[MAC_ADDR_WIDTH-REG_SIZE-1:0];
 				DEST_MAC_ADDR_2 	: dest_mac_addr[REG_SIZE-1:0] 								<= mm_master_writedata;
 				// Asks for wait one clock
 				default 			: mm_master_waitrequest <= 1'b1; // Non existent address
