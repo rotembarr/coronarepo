@@ -42,6 +42,7 @@ module aes_sv_top (
 	avalon_st_if #(.DATA_WIDTH(MAC_STREAM_WIDTH)) removed_ether_st(.clk(clk));
 	avalon_st_if #(.DATA_WIDTH(MAC_STREAM_WIDTH)) msg_here(.clk(clk));
 	avalon_st_if #(.DATA_WIDTH(MAC_STREAM_WIDTH)) transmit_st(.clk(clk));
+	avalon_st_if #(.DATA_WIDTH(MAC_STREAM_WIDTH)) sampled_msg(.clk(clk));
 
 	// Stream assignments
 	assign recieve_st.data 		= recieve_st_data;
@@ -97,16 +98,9 @@ header_remover #(
 
 assign input_mac_dst = input_mac_addr[MAC_HEADER_WIDTH-MAC_ADDR_PAD-1:MAC_HEADER_WIDTH-MAC_ADDR_PAD-MAC_ADDR_WIDTH];
 
-always_ff @(posedge clk or negedge rst_n) begin : proc_sync
-	if(~rst_n) begin
-		addr_drop <= 1'b0;
-	end else begin
-		// Checks if the message is for the FPGA
-		if (mac_addr_valid) begin
-			addr_drop <= input_mac_dst != source_mac_addr;
-		end
-	end
-end
+assign addr_drop = input_mac_dst != source_mac_addr;
+
+assign msg_vld = !addr_drop & mac_addr_valid;
 
 assign debug_led = ~addr_drop;
 
@@ -119,14 +113,22 @@ msg_dropper addr_checker (
 	.drop_indication(wrong_addr)
 );
 
+avalon_sampler msg_sampler (
+	.clk(clk),
+	.rst_n(rst_n),
+	.data_in(msg_here),
+	.data_out(sampled_msg)
+);
+
 header_adder #(
 	.DATA_WIDTH(MAC_STREAM_WIDTH),
 	.HEADER_SIZE(MAC_HEADER_WIDTH)
 ) mac_header_adder (
 	.clk(clk),
 	.rst_n(rst_n),
-	.data_in(msg_here),
+	.data_in(sampled_msg),
 	.header_data({{MAC_ADDR_PAD{1'b0}},dest_mac_addr, source_mac_addr, ETH_TYPE}),
+	.header_vld (msg_vld),
 	.data_out(transmit_st)
 );
 
