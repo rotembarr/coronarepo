@@ -34,7 +34,7 @@ assign msg_in.ready 	= msg_out.ready;
 
 // Valid only when not dropping
 always_comb begin : proc_async
-	msg_out.valid = msg_in.valid & !(drop_indication | drop);
+	msg_out.valid = msg_in.valid & ((msg_in.sop) ? drop : drop_indication);
 end
 
 endmodule
