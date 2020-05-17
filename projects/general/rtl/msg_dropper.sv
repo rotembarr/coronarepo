@@ -29,12 +29,12 @@ end
 assign msg_out.data 	= msg_in.data;
 assign msg_out.empty 	= msg_in.empty;
 assign msg_out.sop 		= msg_in.sop;
-assign msg_out.eop 		= msg_out.eop;
-assign msg_in.ready 	= msg_out.ready;
+assign msg_out.eop 		= msg_in.eop;
+assign msg_in.ready 	= msg_out.ready | drop | drop_indication;
 
 // Valid only when not dropping
 always_comb begin : proc_async
-	msg_out.valid = msg_in.valid & ((msg_in.sop) ? drop : drop_indication);
+	msg_out.valid = msg_in.valid & !((msg_in.sop) ? drop : drop_indication);
 end
 
 endmodule

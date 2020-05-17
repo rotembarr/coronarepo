@@ -10,6 +10,7 @@ module header_adder #(
 	
 	avalon_st_if.slave 				data_in,
  	input logic [HEADER_SIZE-1:0] 	header_data,
+ 	input logic 					header_vld,
  	avalon_st_if.master 			data_out
 );
 
@@ -17,7 +18,7 @@ localparam int HEADER_WORD_COUNT = HEADER_SIZE/DATA_WIDTH;
 
 logic [$clog2(HEADER_WORD_COUNT):0] header_cntr;
 
-typedef enum int {
+typedef enum {
 	IDLE_ST,
 	HEADER_ST,
 	DATA_ST 
@@ -36,14 +37,13 @@ generate
 	end
 endgenerate
 
-assign data_out.valid = data_in.valid;
-
 always_comb begin : proc_async
 	data_out.sop 	= (curr_st == IDLE_ST); // Sop always on, until state changes
 	data_out.eop 	= (curr_st == DATA_ST & data_in.eop); // Eop when data eop
 	data_out.data 	= (curr_st == DATA_ST) ? data_in.data : header_sep[header_cntr]; // Takes a word from the header depending on the counter
 	data_out.empty  = (data_out.eop) ? data_in.empty : 'b0; // Should be 0 unless given value at eop
 	data_in.ready 	= (curr_st == DATA_ST) & data_out.ready; // Ready only when out is
+	data_out.valid 	= (curr_st == DATA_ST) ? data_in.valid : ((curr_st == IDLE_ST) ? header_vld : 1'b1); // Valid when header is valid in idle or header state, else when data valid
 end
 
 always_ff @(posedge clk or negedge rst_n) begin : proc_sync
@@ -54,14 +54,12 @@ always_ff @(posedge clk or negedge rst_n) begin : proc_sync
 		case (curr_st)
 			// Waiting for valid to send the header.
 			IDLE_ST : begin
-				if (data_out.valid & data_out.ready) begin
-					// Header only one word
+				if (data_out.valid & data_out.sop & data_out.ready) begin
 					if (HEADER_WORD_COUNT == 1) begin
 						curr_st <= DATA_ST;
-					// Header continues
-					end else begin
+					end
+					else begin
 						curr_st <= HEADER_ST;
-						header_cntr <= header_cntr + 1;
 					end
 				end
 			end
