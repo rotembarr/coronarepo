@@ -1,7 +1,6 @@
-import aes_top_pack::*;
-
 module word_generator #(
-	parameter int DATA_WIDTH = 128
+	parameter int DATA_WIDTH 		= 128,
+	parameter int WORD_COUNTER_SIZE = 8
 )(
 	input logic clk,
 	input logic rst_n,

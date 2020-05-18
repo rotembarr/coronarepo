@@ -1,6 +1,6 @@
-import aes_top_pack::*;
-
-module word_counter (
+module word_counter #(
+	parameter int WORD_COUNTER_SIZE = 8
+)(
 	input logic clk,
 	input logic rst_n,
 	
