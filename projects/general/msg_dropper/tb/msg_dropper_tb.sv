@@ -15,6 +15,8 @@ msg_dropper dut (
 	.drop_indication(drop_indication)
 );
 
+localparam EXAMPLE_DATA = 'h0000001c24174acb00e04c68004108004500001c4bfd000080110000a9fe96dfa9fe0101c17507d00008ebf6;
+
 initial begin
 	clk = 1'b0;
 	forever begin
