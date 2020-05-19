@@ -2,8 +2,9 @@
 *.pyc
 *.bak
 .*
+!.bazel*
+!*bazel*
 !.gitignore
-*/.*
 **/qsys/*/
 *.sopcinfo
 *output_files/

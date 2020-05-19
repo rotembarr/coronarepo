@@ -1,0 +1,12 @@
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+    name = "meru",
+    urls = ["https://github.com/errangutan/meru/archive/master.zip"],
+    strip_prefix = "meru-master"
+)
+
+load("@meru//:repositories.bzl", "meru_dependencies")
+meru_dependencies()
+load("@meru//:setup.bzl", "meru_setup")
+meru_setup()
