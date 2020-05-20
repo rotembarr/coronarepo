@@ -81,6 +81,22 @@
          type = "int";
       }
    }
+   element recieve_fifo
+   {
+      datum _sortIndex
+      {
+         value = "5";
+         type = "int";
+      }
+   }
+   element transmit_fifo
+   {
+      datum _sortIndex
+      {
+         value = "6";
+         type = "int";
+      }
+   }
 }
 ]]></parameter>
  <parameter name="clockCrossingAdapter" value="HANDSHAKE" />
@@ -114,16 +130,6 @@
    type="conduit"
    dir="end" />
  <interface
-   name="eth_net_recieve"
-   internal="eth_net_mac.receive"
-   type="avalon_streaming"
-   dir="start" />
- <interface
-   name="eth_net_transmit"
-   internal="eth_net_mac.transmit"
-   type="avalon_streaming"
-   dir="end" />
- <interface
    name="master_rst"
    internal="jtag_to_mm.master_reset"
    type="reset"
@@ -139,7 +145,17 @@
    internal="out_pll.refclk"
    type="clock"
    dir="end" />
+ <interface
+   name="recieve_out"
+   internal="recieve_fifo.out"
+   type="avalon_streaming"
+   dir="start" />
  <interface name="reset" internal="qsys_clk.clk_in_reset" type="reset" dir="end" />
+ <interface
+   name="transmit_in"
+   internal="transmit_fifo.in"
+   type="avalon_streaming"
+   dir="end" />
  <module name="eth_net_mac" kind="altera_eth_tse" version="19.1" enabled="1">
   <parameter name="AUTO_DEVICE" value="5CSXFC6D6F31I7" />
   <parameter name="AUTO_DEVICE_SPEEDGRADE" value="7_H6" />
@@ -427,6 +443,46 @@
   <parameter name="inputClockFrequency" value="0" />
   <parameter name="resetSynchronousEdges" value="NONE" />
  </module>
+ <module
+   name="recieve_fifo"
+   kind="altera_avalon_sc_fifo"
+   version="19.1"
+   enabled="1">
+  <parameter name="BITS_PER_SYMBOL" value="8" />
+  <parameter name="CHANNEL_WIDTH" value="0" />
+  <parameter name="EMPTY_LATENCY" value="3" />
+  <parameter name="ENABLE_EXPLICIT_MAXCHANNEL" value="false" />
+  <parameter name="ERROR_WIDTH" value="0" />
+  <parameter name="EXPLICIT_MAXCHANNEL" value="0" />
+  <parameter name="FIFO_DEPTH" value="256" />
+  <parameter name="SYMBOLS_PER_BEAT" value="4" />
+  <parameter name="USE_ALMOST_EMPTY_IF" value="0" />
+  <parameter name="USE_ALMOST_FULL_IF" value="0" />
+  <parameter name="USE_FILL_LEVEL" value="0" />
+  <parameter name="USE_MEMORY_BLOCKS" value="1" />
+  <parameter name="USE_PACKETS" value="1" />
+  <parameter name="USE_STORE_FORWARD" value="0" />
+ </module>
+ <module
+   name="transmit_fifo"
+   kind="altera_avalon_sc_fifo"
+   version="19.1"
+   enabled="1">
+  <parameter name="BITS_PER_SYMBOL" value="8" />
+  <parameter name="CHANNEL_WIDTH" value="0" />
+  <parameter name="EMPTY_LATENCY" value="3" />
+  <parameter name="ENABLE_EXPLICIT_MAXCHANNEL" value="false" />
+  <parameter name="ERROR_WIDTH" value="0" />
+  <parameter name="EXPLICIT_MAXCHANNEL" value="0" />
+  <parameter name="FIFO_DEPTH" value="256" />
+  <parameter name="SYMBOLS_PER_BEAT" value="4" />
+  <parameter name="USE_ALMOST_EMPTY_IF" value="0" />
+  <parameter name="USE_ALMOST_FULL_IF" value="0" />
+  <parameter name="USE_FILL_LEVEL" value="0" />
+  <parameter name="USE_MEMORY_BLOCKS" value="1" />
+  <parameter name="USE_PACKETS" value="1" />
+  <parameter name="USE_STORE_FORWARD" value="0" />
+ </module>
  <connection
    kind="avalon"
    version="19.1"
@@ -445,12 +501,32 @@
   <parameter name="baseAddress" value="0x1000" />
   <parameter name="defaultConnection" value="false" />
  </connection>
+ <connection
+   kind="avalon_streaming"
+   version="19.1"
+   start="transmit_fifo.out"
+   end="eth_net_mac.transmit" />
+ <connection
+   kind="avalon_streaming"
+   version="19.1"
+   start="eth_net_mac.receive"
+   end="recieve_fifo.in" />
  <connection kind="clock" version="19.1" start="qsys_clk.clk" end="jtag_to_mm.clk" />
  <connection
    kind="clock"
    version="19.1"
    start="qsys_clk.clk"
    end="mm_out_bridge.clk" />
+ <connection
+   kind="clock"
+   version="19.1"
+   start="qsys_clk.clk"
+   end="recieve_fifo.clk" />
+ <connection
+   kind="clock"
+   version="19.1"
+   start="qsys_clk.clk"
+   end="transmit_fifo.clk" />
  <connection
    kind="clock"
    version="19.1"
@@ -476,6 +552,16 @@
    version="19.1"
    start="qsys_clk.clk_reset"
    end="jtag_to_mm.clk_reset" />
+ <connection
+   kind="reset"
+   version="19.1"
+   start="qsys_clk.clk_reset"
+   end="recieve_fifo.clk_reset" />
+ <connection
+   kind="reset"
+   version="19.1"
+   start="qsys_clk.clk_reset"
+   end="transmit_fifo.clk_reset" />
  <connection
    kind="reset"
    version="19.1"
