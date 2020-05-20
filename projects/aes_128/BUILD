@@ -17,5 +17,9 @@ block(
     	"rtl/data_flow_control.sv",
     	"rtl/aes_block.sv",
     	"rtl/aes_counter_mode.sv"
+    ],
+    blocks = [
+        "//general/avalon_st_if:avalon_st_if",
+        "//general/dvr_if:dvr_if"
     ]
 )
