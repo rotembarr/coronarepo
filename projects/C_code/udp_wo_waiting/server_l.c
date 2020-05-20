@@ -104,35 +104,6 @@ int main()
     }
 	memset(dec_message_aux, '\0', BUFF_LEN);
 
-	// Auxiliary variables for the encryption process
-	// This varaible will point to the encrypted data in uint8_t type
-	uint8_t* enc_aux;
-
-	// data_to_dec will hold each 16 bytes to encrypt for each encryption process
-	char* data_to_enc;
-	data_to_enc = (char*) malloc(17*sizeof(char));
-	if (data_to_enc == NULL) {
-        printf("Malloc failed.\n");
-        return 1;
-    }
-
-	// Will hold the whole data encrypted
-	char* enc_message;
-	enc_message = (char*) malloc(BUFF_LEN*sizeof(char));
-	if (enc_message == NULL) {
-        printf("Malloc failed.\n");
-        return 1;
-    }
-
-	// A variable for the decrypted data in uiny8_t type
-	uint8_t* enc_message_aux;
-	enc_message_aux = (uint8_t*) malloc(BUFF_LEN*sizeof(uint8_t));
-	if (enc_message_aux == NULL) {
-        printf("Malloc failed.\n");
-        return 1;
-    }
-	memset(enc_message_aux, '\0', BUFF_LEN);
-
 	// Start the communication, listening to data
 	while(strcmp("exit\n", dec_message) & strcmp("exit\0", dec_message))
 	{
@@ -183,50 +154,12 @@ int main()
 		printf("Received packet from %s:%d\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
 		printf("Data: %s\n" , dec_message);
 
-
-		// Encryption process
-		// Number of 16-bytes iterartions needed for the AES process
-		int num_encryptions = (int) ceil((double)strlen(dec_message)/16.0);
-
-		// Setting the memory to \0
-		memset(data_to_enc, 	'\0', 17);
-		memset(enc_message, 	'\0', BUFF_LEN);
-		memset(enc_message_aux, '\0', BUFF_LEN);
-
-		// Encrypt for each process of 16-byte
-		for (int i = 0; i < num_encryptions; i++)
-		{
-			memcpy(data_to_enc, dec_message+16*i*sizeof(char), 16*sizeof(char));
-			data_to_enc[16] = '\0';
-			enc_aux = aes_enc_128bits(data_to_enc, enc_key_str);
-			// Check if the encryption failed
-			if (enc_aux == NULL){
-				return 1;
-			}
-			memcpy(enc_message_aux+16*i*sizeof(char), enc_aux, 16*sizeof(uint8_t));
-			free(enc_aux);
-		}
-
-		// Casting the message to chars
-		for (int i = 0; i < num_encryptions*16+1; i++)
-    	{
-        	enc_message[i] = (char)enc_message_aux[i];
-    	}
-		
-		// Now reply the client with the same data
-		if (sendto(socket_id, enc_message, recv_len, 0, (struct sockaddr*) &client_addr, slen) < 0) {
-			printf("sendto() failed.");
-			exit(EXIT_FAILURE);
-		}
 	}
 
 	// Free the memory
 	free(buff);
-	free(enc_message);
 	free(dec_message);
-	free(data_to_enc);
 	free(data_to_dec);
-	free(enc_message_aux);
 	free(dec_message_aux);
 
 	// Close the socket
