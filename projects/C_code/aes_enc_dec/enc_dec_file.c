@@ -33,7 +33,6 @@ int main(int argc, char** argv)
     // The variables for writing the data into the file
     FILE *fp_w = fopen(argv[3], "w");
     unsigned char c1, c2, sum;
-    //unsigned char sum;
 
     // The variable for reading each line in the file
     char* line;
@@ -54,7 +53,24 @@ int main(int argc, char** argv)
     memset(hex_line, '\0', BUFF_LEN);
 
     // This string will hold the key for the AES encryption
-	char* enc_key_str = "0000000000000000\0";
+	char* enc_key_str_hex = "11111111111111111111111111111111\0";
+	char* enc_key_str;
+    enc_key_str = (char*) malloc(17*sizeof(char));
+    if (enc_key_str == NULL) {
+        printf("Malloc failed.\n");
+        return 1;
+    }
+    memset(enc_key_str, '\0', 17);
+
+	// Casting the hex char into ascii char (16 bytes)
+	for (int i = 0; i < 32; i+=2)
+    {
+    	// Casting into hex
+       	c1 = ascii_to_hex(enc_key_str_hex[i]);
+       	c2 = ascii_to_hex(enc_key_str_hex[i+1]);
+       	sum = c1 << 4 | c2;
+       	enc_key_str[i/2] = (char)sum;
+   	}
 
     // Auxiliary variables for the encryption process
     // This char* will hold the line encrypted
