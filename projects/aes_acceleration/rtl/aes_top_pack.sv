@@ -29,5 +29,6 @@ package aes_top_pack;
 	localparam int IP_HEADER_WIDTH 		= 160;
 
 	localparam int MAC_STREAM_WIDTH 	= 32; 		// DO NOT CHANGE, from the tse ip core 
+	localparam int ROUNDED_ADDR_WIDTH 	= 64;
 
 endpackage

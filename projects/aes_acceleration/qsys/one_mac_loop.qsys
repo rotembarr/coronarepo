@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<system name="$${FILENAME}">
+ <component
+   name="$${FILENAME}"
+   displayName="$${FILENAME}"
+   version="1.0"
+   description=""
+   tags=""
+   categories="System" />
+ <parameter name="bonusData"><![CDATA[bonusData 
+{
+   element eth_net_mac
+   {
+      datum _sortIndex
+      {
+         value = "2";
+         type = "int";
+      }
+   }
+   element eth_net_mac.control_port
+   {
+      datum _lockedAddress
+      {
+         value = "0";
+         type = "boolean";
+      }
+   }
+   element eth_net_mac.mac_misc_connection
+   {
+      datum _tags
+      {
+         value = "";
+         type = "String";
+      }
+   }
+   element eth_net_mac.pcs_ref_clk_clock_connection
+   {
+      datum _tags
+      {
+         value = "";
+         type = "String";
+      }
+   }
+   element jtag_to_mm
+   {
+      datum _sortIndex
+      {
+         value = "1";
+         type = "int";
+      }
+   }
+   element qsys_clk
+   {
+      datum _sortIndex
+      {
+         value = "0";
+         type = "int";
+      }
+   }
+   element recieve_fifo
+   {
+      datum _sortIndex
+      {
+         value = "3";
+         type = "int";
+      }
+   }
+   element transmit_fifo
+   {
+      datum _sortIndex
+      {
+         value = "4";
+         type = "int";
+      }
+   }
+}
+]]></parameter>
+ <parameter name="clockCrossingAdapter" value="HANDSHAKE" />
+ <parameter name="device" value="5CSXFC6D6F31I7" />
+ <parameter name="deviceFamily" value="Cyclone V" />
+ <parameter name="deviceSpeedGrade" value="7_H6" />
+ <parameter name="fabricMode" value="QSYS" />
+ <parameter name="generateLegacySim" value="false" />
+ <parameter name="generationId" value="0" />
+ <parameter name="globalResetBus" value="false" />
+ <parameter name="hdlLanguage" value="VERILOG" />
+ <parameter name="hideFromIPCatalog" value="false" />
+ <parameter name="lockedInterfaceDefinition" value="" />
+ <parameter name="maxAdditionalLatency" value="1" />
+ <parameter name="projectName" value="" />
+ <parameter name="sopcBorderPoints" value="false" />
+ <parameter name="systemHash" value="0" />
+ <parameter name="testBenchDutName" value="" />
+ <parameter name="timeStamp" value="0" />
+ <parameter name="useTestBenchNamingPattern" value="false" />
+ <instanceScript></instanceScript>
+ <interface name="clk" internal="qsys_clk.clk_in" type="clock" dir="end" />
+ <interface
+   name="eth_net_conn"
+   internal="eth_net_mac.serial_connection"
+   type="conduit"
+   dir="end" />
+ <interface
+   name="eth_net_mac_mdio"
+   internal="eth_net_mac.mac_mdio_connection"
+   type="conduit"
+   dir="end" />
+ <interface
+   name="master_rst"
+   internal="jtag_to_mm.master_reset"
+   type="reset"
+   dir="start" />
+ <interface
+   name="recieve_fifo_out"
+   internal="recieve_fifo.out"
+   type="avalon_streaming"
+   dir="start" />
+ <interface name="reset" internal="qsys_clk.clk_in_reset" type="reset" dir="end" />
+ <interface
+   name="transmit_fifo_in"
+   internal="transmit_fifo.in"
+   type="avalon_streaming"
+   dir="end" />
+ <module name="eth_net_mac" kind="altera_eth_tse" version="19.1" enabled="1">
+  <parameter name="AUTO_DEVICE" value="5CSXFC6D6F31I7" />
+  <parameter name="AUTO_DEVICE_SPEEDGRADE" value="7_H6" />
+  <parameter name="XCVR_RCFG_JTAG_ENABLE" value="0" />
+  <parameter name="XCVR_SET_CAPABILITY_REG_ENABLE" value="0" />
+  <parameter name="XCVR_SET_CSR_SOFT_LOGIC_ENABLE" value="0" />
+  <parameter name="XCVR_SET_PRBS_SOFT_LOGIC_ENABLE" value="0" />
+  <parameter name="XCVR_SET_USER_IDENTIFIER" value="0" />
+  <parameter name="core_variation" value="MAC_PCS" />
+  <parameter name="deviceFamilyName" value="Cyclone V" />
+  <parameter name="eg_addr" value="11" />
+  <parameter name="ena_hash" value="false" />
+  <parameter name="enable_alt_reconfig" value="false" />
+  <parameter name="enable_ecc" value="false" />
+  <parameter name="enable_ena" value="32" />
+  <parameter name="enable_gmii_loopback" value="false" />
+  <parameter name="enable_hd_logic" value="false" />
+  <parameter name="enable_mac_flow_ctrl" value="false" />
+  <parameter name="enable_mac_vlan" value="false" />
+  <parameter name="enable_magic_detect" value="false" />
+  <parameter name="enable_ptp_1step" value="false" />
+  <parameter name="enable_sgmii" value="true" />
+  <parameter name="enable_shift16" value="true" />
+  <parameter name="enable_sup_addr" value="false" />
+  <parameter name="enable_timestamping" value="false" />
+  <parameter name="enable_use_internal_fifo" value="true" />
+  <parameter name="export_pwrdn" value="false" />
+  <parameter name="ext_stat_cnt_ena" value="false" />
+  <parameter name="ifGMII" value="MII_GMII" />
+  <parameter name="ing_addr" value="11" />
+  <parameter name="max_channels" value="1" />
+  <parameter name="mdio_clk_div" value="125" />
+  <parameter name="nf_phyip_rcfg_enable" value="false" />
+  <parameter name="phy_identifier" value="0" />
+  <parameter name="phyip_en_synce_support" value="false" />
+  <parameter name="phyip_pll_base_data_rate" value="1250 Mbps" />
+  <parameter name="phyip_pll_type" value="CMU" />
+  <parameter name="phyip_pma_bonding_mode" value="x1" />
+  <parameter name="starting_channel_number" value="0" />
+  <parameter name="stat_cnt_ena" value="true" />
+  <parameter name="transceiver_type" value="GXB" />
+  <parameter name="tstamp_fp_width" value="4" />
+  <parameter name="useMDIO" value="true" />
+  <parameter name="use_mac_clken" value="false" />
+  <parameter name="use_misc_ports" value="true" />
+ </module>
+ <module
+   name="jtag_to_mm"
+   kind="altera_jtag_avalon_master"
+   version="19.1"
+   enabled="1">
+  <parameter name="AUTO_DEVICE" value="5CSXFC6D6F31I7" />
+  <parameter name="AUTO_DEVICE_FAMILY" value="Cyclone V" />
+  <parameter name="AUTO_DEVICE_SPEEDGRADE" value="7_H6" />
+  <parameter name="COMPONENT_CLOCK" value="0" />
+  <parameter name="FAST_VER" value="0" />
+  <parameter name="FIFO_DEPTHS" value="2" />
+  <parameter name="PLI_PORT" value="50000" />
+  <parameter name="USE_PLI" value="0" />
+ </module>
+ <module name="qsys_clk" kind="clock_source" version="19.1" enabled="1">
+  <parameter name="clockFrequency" value="50000000" />
+  <parameter name="clockFrequencyKnown" value="true" />
+  <parameter name="inputClockFrequency" value="0" />
+  <parameter name="resetSynchronousEdges" value="NONE" />
+ </module>
+ <module
+   name="recieve_fifo"
+   kind="altera_avalon_sc_fifo"
+   version="19.1"
+   enabled="1">
+  <parameter name="BITS_PER_SYMBOL" value="8" />
+  <parameter name="CHANNEL_WIDTH" value="0" />
+  <parameter name="EMPTY_LATENCY" value="3" />
+  <parameter name="ENABLE_EXPLICIT_MAXCHANNEL" value="false" />
+  <parameter name="ERROR_WIDTH" value="0" />
+  <parameter name="EXPLICIT_MAXCHANNEL" value="0" />
+  <parameter name="FIFO_DEPTH" value="256" />
+  <parameter name="SYMBOLS_PER_BEAT" value="4" />
+  <parameter name="USE_ALMOST_EMPTY_IF" value="0" />
+  <parameter name="USE_ALMOST_FULL_IF" value="0" />
+  <parameter name="USE_FILL_LEVEL" value="0" />
+  <parameter name="USE_MEMORY_BLOCKS" value="1" />
+  <parameter name="USE_PACKETS" value="1" />
+  <parameter name="USE_STORE_FORWARD" value="0" />
+ </module>
+ <module
+   name="transmit_fifo"
+   kind="altera_avalon_sc_fifo"
+   version="19.1"
+   enabled="1">
+  <parameter name="BITS_PER_SYMBOL" value="8" />
+  <parameter name="CHANNEL_WIDTH" value="0" />
+  <parameter name="EMPTY_LATENCY" value="3" />
+  <parameter name="ENABLE_EXPLICIT_MAXCHANNEL" value="false" />
+  <parameter name="ERROR_WIDTH" value="0" />
+  <parameter name="EXPLICIT_MAXCHANNEL" value="0" />
+  <parameter name="FIFO_DEPTH" value="256" />
+  <parameter name="SYMBOLS_PER_BEAT" value="4" />
+  <parameter name="USE_ALMOST_EMPTY_IF" value="0" />
+  <parameter name="USE_ALMOST_FULL_IF" value="0" />
+  <parameter name="USE_FILL_LEVEL" value="0" />
+  <parameter name="USE_MEMORY_BLOCKS" value="1" />
+  <parameter name="USE_PACKETS" value="1" />
+  <parameter name="USE_STORE_FORWARD" value="0" />
+ </module>
+ <connection
+   kind="avalon"
+   version="19.1"
+   start="jtag_to_mm.master"
+   end="eth_net_mac.control_port">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x0000" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon_streaming"
+   version="19.1"
+   start="transmit_fifo.out"
+   end="eth_net_mac.transmit" />
+ <connection
+   kind="avalon_streaming"
+   version="19.1"
+   start="eth_net_mac.receive"
+   end="recieve_fifo.in" />
+ <connection kind="clock" version="19.1" start="qsys_clk.clk" end="jtag_to_mm.clk" />
+ <connection
+   kind="clock"
+   version="19.1"
+   start="qsys_clk.clk"
+   end="recieve_fifo.clk" />
+ <connection
+   kind="clock"
+   version="19.1"
+   start="qsys_clk.clk"
+   end="transmit_fifo.clk" />
+ <connection
+   kind="clock"
+   version="19.1"
+   start="qsys_clk.clk"
+   end="eth_net_mac.control_port_clock_connection" />
+ <connection
+   kind="clock"
+   version="19.1"
+   start="qsys_clk.clk"
+   end="eth_net_mac.pcs_ref_clk_clock_connection" />
+ <connection
+   kind="clock"
+   version="19.1"
+   start="qsys_clk.clk"
+   end="eth_net_mac.receive_clock_connection" />
+ <connection
+   kind="clock"
+   version="19.1"
+   start="qsys_clk.clk"
+   end="eth_net_mac.transmit_clock_connection" />
+ <connection
+   kind="reset"
+   version="19.1"
+   start="qsys_clk.clk_reset"
+   end="jtag_to_mm.clk_reset" />
+ <connection
+   kind="reset"
+   version="19.1"
+   start="qsys_clk.clk_reset"
+   end="recieve_fifo.clk_reset" />
+ <connection
+   kind="reset"
+   version="19.1"
+   start="qsys_clk.clk_reset"
+   end="transmit_fifo.clk_reset" />
+ <connection
+   kind="reset"
+   version="19.1"
+   start="qsys_clk.clk_reset"
+   end="eth_net_mac.reset_connection" />
+ <interconnectRequirement for="$system" name="qsys_mm.clockCrossingAdapter" value="HANDSHAKE" />
+ <interconnectRequirement for="$system" name="qsys_mm.enableEccProtection" value="FALSE" />
+ <interconnectRequirement for="$system" name="qsys_mm.insertDefaultSlave" value="FALSE" />
+ <interconnectRequirement for="$system" name="qsys_mm.maxAdditionalLatency" value="1" />
+</system>

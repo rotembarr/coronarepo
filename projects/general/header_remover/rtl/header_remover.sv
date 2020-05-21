@@ -18,7 +18,7 @@ localparam int HEADER_WORDS = HEADER_SIZE/DATA_WIDTH;
 
 logic [$clog2(HEADER_WORDS):0] header_cntr;
 
-typedef enum int {
+typedef enum {
 	HEADER_ST,
 	DATA_ST 
 } mod_st;

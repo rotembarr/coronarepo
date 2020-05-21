@@ -8,14 +8,14 @@ module aes_sv_top (
 	input logic clk,
 	input logic rst_n,
 
-	// Avalon MM
-	input 	logic [ADDRESS_SIZE-1:0] 	mm_master_address,
-	input 	logic 						mm_master_write,
-	input 	logic [REG_SIZE-1:0] 		mm_master_writedata,
-	input 	logic 						mm_master_read,
-	output 	logic 						mm_master_readdatavalid,
-	output 	logic [REG_SIZE-1:0] 		mm_master_readdata,
-	output 	logic 						mm_master_waitrequest,
+	// // Avalon MM
+	// input 	logic [ADDRESS_SIZE-1:0] 	mm_master_address,
+	// input 	logic 						mm_master_write,
+	// input 	logic [REG_SIZE-1:0] 		mm_master_writedata,
+	// input 	logic 						mm_master_read,
+	// output 	logic 						mm_master_readdatavalid,
+	// output 	logic [REG_SIZE-1:0] 		mm_master_readdata,
+	// output 	logic 						mm_master_waitrequest,
 
 	// Recieve stream
 	input 	logic [31:0] 				recieve_st_data,
@@ -37,12 +37,12 @@ module aes_sv_top (
 	output 	logic 						debug_led
 );
 
-	// Streams
+// 	// Streams
 	avalon_st_if #(.DATA_WIDTH(MAC_STREAM_WIDTH)) recieve_st(.clk(clk));
-	avalon_st_if #(.DATA_WIDTH(MAC_STREAM_WIDTH)) removed_ether_st(.clk(clk));
-	avalon_st_if #(.DATA_WIDTH(MAC_STREAM_WIDTH)) msg_here(.clk(clk));
+// 	avalon_st_if #(.DATA_WIDTH(MAC_STREAM_WIDTH)) removed_ether_st(.clk(clk));
+// 	avalon_st_if #(.DATA_WIDTH(MAC_STREAM_WIDTH)) msg_here(.clk(clk));
 	avalon_st_if #(.DATA_WIDTH(MAC_STREAM_WIDTH)) transmit_st(.clk(clk));
-	avalon_st_if #(.DATA_WIDTH(MAC_STREAM_WIDTH)) sampled_msg(.clk(clk));
+// 	avalon_st_if #(.DATA_WIDTH(MAC_STREAM_WIDTH)) sampled_msg(.clk(clk));
 
 	// Stream assignments
 	assign recieve_st.data 		= recieve_st_data;
@@ -59,77 +59,99 @@ module aes_sv_top (
 	assign transmit_st_valid 	= transmit_st.valid;
 	assign transmit_st.ready 	= transmit_st_ready;
 
-	// Configs
-	logic [MAC_ADDR_WIDTH-1:0] source_mac_addr;
-	logic [MAC_ADDR_WIDTH-1:0] dest_mac_addr;
-	logic addr_drop;
+// 	// Configs
+// 	logic [MAC_ADDR_WIDTH-1:0] source_mac_addr;
+// 	logic [MAC_ADDR_WIDTH-1:0] dest_mac_addr;
+// 	logic addr_drop;
 
-	// Modules output
-	logic [MAC_HEADER_WIDTH-1:0] input_mac_addr;
-	logic [MAC_ADDR_WIDTH-1:0]   input_mac_dst;
-	logic mac_addr_valid;
-	logic wrong_addr;
+// 	// Modules output
+// 	logic [MAC_HEADER_WIDTH-1:0] input_mac_addr;
+// 	logic [MAC_ADDR_WIDTH-1:0]   input_mac_dst;
+// 	logic mac_addr_valid;
+// 	logic wrong_addr;
 
-register_controller aes_register_controller (
-	.clk(clk),
-	.rst_n(rst_n),
-	.mm_master_address(mm_master_address),
-	.mm_master_writedata(mm_master_writedata),
-	.mm_master_write(mm_master_write),
-	.mm_master_read(mm_master_read),
-	.mm_master_readdata(mm_master_readdata),
-	.mm_master_readdatavalid(mm_master_readdatavalid),
-	.mm_master_waitrequest(mm_master_waitrequest),
-	.source_mac_addr(source_mac_addr),
-	.dest_mac_addr(dest_mac_addr)
+// register_controller aes_register_controller (
+// 	.clk(clk),
+// 	.rst_n(rst_n),
+// 	.mm_master_address(mm_master_address),
+// 	.mm_master_writedata(mm_master_writedata),
+// 	.mm_master_write(mm_master_write),
+// 	.mm_master_read(mm_master_read),
+// 	.mm_master_readdata(mm_master_readdata),
+// 	.mm_master_readdatavalid(mm_master_readdatavalid),
+// 	.mm_master_waitrequest(mm_master_waitrequest),
+// 	.source_mac_addr(source_mac_addr),
+// 	.dest_mac_addr(dest_mac_addr)
+// );
+
+// header_remover #(
+// 	.DATA_WIDTH(MAC_STREAM_WIDTH),
+// 	.HEADER_SIZE(MAC_HEADER_WIDTH)
+// ) mac_header_remover (
+// 	.clk(clk),
+// 	.rst_n(rst_n),
+// 	.data_in(recieve_st),
+// 	.header_data(input_mac_addr),
+// 	.header_valid(mac_addr_valid),
+// 	.data_out(removed_ether_st)
+// );
+
+// assign input_mac_dst = input_mac_addr[MAC_HEADER_WIDTH-MAC_ADDR_PAD-1:MAC_HEADER_WIDTH-MAC_ADDR_PAD-MAC_ADDR_WIDTH];
+
+// assign addr_drop = input_mac_dst != source_mac_addr;
+
+// assign msg_vld = !addr_drop & mac_addr_valid;
+
+// assign debug_led = ~addr_drop;
+
+// msg_dropper addr_checker (
+// 	.clk(clk),
+// 	.rst_n(rst_n),
+// 	.drop(addr_drop),
+// 	.msg_in(removed_ether_st),
+// 	.msg_out(msg_here),
+// 	.drop_indication(wrong_addr)
+// );
+
+// avalon_sampler msg_sampler (
+// 	.clk(clk),
+// 	.rst_n(rst_n),
+// 	.data_in(msg_here),
+// 	.data_out(sampled_msg)
+// );
+
+// header_adder #(
+// 	.DATA_WIDTH(MAC_STREAM_WIDTH),
+// 	.HEADER_SIZE(ROUNDED_ADDR_WIDTH)
+// ) mac_header_adder (
+// 	.clk(clk),
+// 	.rst_n(rst_n),
+// 	.data_in(sampled_msg),
+// 	.header_data(dest_mac_addr),
+// 	.header_vld (msg_vld),
+// 	.data_out(transmit_st)
+// );
+
+	
+
+	logic header_valid;
+	avalon_st_if #(.DATA_WIDTH(MAC_STREAM_WIDTH)) data_out(.clk(clk));
+
+header_remover #(.DATA_WIDTH(MAC_STREAM_WIDTH), .HEADER_SIZE(ROUNDED_ADDR_WIDTH)) i_header_remover (
+	.clk         (clk         ),
+	.rst_n       (rst_n       ),
+	.data_in     (recieve_st     ),
+	.header_data ( ), // TODO: Check connection ! Signal/port not matching : Expecting logic [ROUNDED_ADDR_WIDTH-1:0]  -- Found localparam logic [ROUNDED_ADDR_WIDTH-1:0] 
+	.header_valid(header_valid),
+	.data_out    (data_out    )
 );
-
-header_remover #(
-	.DATA_WIDTH(MAC_STREAM_WIDTH),
-	.HEADER_SIZE(MAC_HEADER_WIDTH)
-) mac_header_remover (
-	.clk(clk),
-	.rst_n(rst_n),
-	.data_in(recieve_st),
-	.header_data(input_mac_addr),
-	.header_valid(mac_addr_valid),
-	.data_out(removed_ether_st)
-);
-
-assign input_mac_dst = input_mac_addr[MAC_HEADER_WIDTH-MAC_ADDR_PAD-1:MAC_HEADER_WIDTH-MAC_ADDR_PAD-MAC_ADDR_WIDTH];
-
-assign addr_drop = input_mac_dst != source_mac_addr;
-
-assign msg_vld = !addr_drop & mac_addr_valid;
-
-assign debug_led = ~addr_drop;
-
-msg_dropper addr_checker (
-	.clk(clk),
-	.rst_n(rst_n),
-	.drop(addr_drop),
-	.msg_in(removed_ether_st),
-	.msg_out(msg_here),
-	.drop_indication(wrong_addr)
-);
-
-avalon_sampler msg_sampler (
-	.clk(clk),
-	.rst_n(rst_n),
-	.data_in(msg_here),
-	.data_out(sampled_msg)
-);
-
-header_adder #(
-	.DATA_WIDTH(MAC_STREAM_WIDTH),
-	.HEADER_SIZE(MAC_HEADER_WIDTH)
-) mac_header_adder (
-	.clk(clk),
-	.rst_n(rst_n),
-	.data_in(sampled_msg),
-	.header_data({{MAC_ADDR_PAD{1'b0}},dest_mac_addr, source_mac_addr, ETH_TYPE}),
-	.header_vld (msg_vld),
-	.data_out(transmit_st)
+header_adder #(.DATA_WIDTH(MAC_STREAM_WIDTH), .HEADER_SIZE(ROUNDED_ADDR_WIDTH)) i_header_adder (
+	.clk        (clk        ),
+	.rst_n      (rst_n      ),
+	.data_in    (data_out    ),
+	.header_data(64'hdeadbeefc001babe),
+	.header_vld (header_valid ),
+	.data_out   (transmit_st   )
 );
 
 
