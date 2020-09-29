@@ -109,7 +109,7 @@ set_false_path -from [get_registers {*|altera_tse_register_map:U_REG|mac_1[*]}] 
 set_false_path -from [get_registers {*|altera_tse_register_map:U_REG|frm_length[*]}] -to [get_registers {*|altera_tse_mac_rx:U_RX|*}]
 set_false_path -to [get_pins -nocase -compatibility_mode {*|altera_tse_reset_synchronizer:*|altera_tse_reset_synchronizer_chain*|clrn}]
 set_false_path -to [get_pins -nocase -compatibility_mode {*|alt_rst_sync_uq1|altera_reset_synchronizer_int_chain*|clrn}]
-
+set_false_path -from [get_clocks {led_blinker:i_led_blinker|led_blinker_eth_tse_0:eth_tse_0|altera_xcvr_custom:i_custom_phyip_0|av_xcvr_custom_nr:A5|av_xcvr_custom_native:transceiver_core|av_xcvr_native:gen.av_xcvr_native_insts[0].gen_bonded_group.av_xcvr_native_inst|av_pcs:inst_av_pcs|av_pcs_ch:ch[0].inst_av_pcs_ch|av_hssi_rx_pld_pcs_interface_rbc:inst_av_hssi_rx_pld_pcs_interface|pld8grxclkout~CLKENA0FMAX_CAP_FF}] -to [get_clocks {led_blinker:i_led_blinker|led_blinker_eth_tse_0:eth_tse_0|altera_xcvr_custom:i_custom_phyip_0|av_xcvr_custom_nr:A5|av_xcvr_custom_native:transceiver_core|av_xcvr_native:gen.av_xcvr_native_insts[0].gen_bonded_group.av_xcvr_native_inst|av_pcs:inst_av_pcs|av_pcs_ch:ch[0].inst_av_pcs_ch|av_hssi_rx_pld_pcs_interface_rbc:inst_av_hssi_rx_pld_pcs_interface|pld8grxclkout~CLKENA0FMAX_CAP_FF}]
 
 #**************************************************************
 # Set Multicycle Path
