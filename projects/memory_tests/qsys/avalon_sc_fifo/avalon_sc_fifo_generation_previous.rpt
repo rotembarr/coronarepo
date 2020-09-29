@@ -1,0 +1,19 @@
+Info: Starting: Create HDL design files for synthesis
+Info: qsys-generate D:\USER\Documents\coronarepo\projects\memory_tests\qsys\avalon_sc_fifo.qsys --synthesis=VERILOG --output-directory=D:\USER\Documents\coronarepo\projects\memory_tests\qsys\avalon_sc_fifo\synthesis --family="Cyclone V" --part=5CSXFC6D6F31I7
+Progress: Loading qsys/avalon_sc_fifo.qsys
+Progress: Reading input file
+Progress: Adding clk_0 [clock_source 19.1]
+Progress: Parameterizing module clk_0
+Progress: Adding sc_fifo_0 [altera_avalon_sc_fifo 19.1]
+Progress: Parameterizing module sc_fifo_0
+Progress: Building connections
+Progress: Parameterizing connections
+Progress: Validating
+Progress: Done reading input file
+Warning: avalon_sc_fifo.sc_fifo_0: sc_fifo_0.csr must be connected to an Avalon-MM master
+Info: avalon_sc_fifo: Generating avalon_sc_fifo "avalon_sc_fifo" for QUARTUS_SYNTH
+Info: sc_fifo_0: "avalon_sc_fifo" instantiated altera_avalon_sc_fifo "sc_fifo_0"
+Info: rst_controller: "avalon_sc_fifo" instantiated altera_reset_controller "rst_controller"
+Info: avalon_sc_fifo: Done "avalon_sc_fifo" with 3 modules, 5 files
+Info: qsys-generate succeeded.
+Info: Finished: Create HDL design files for synthesis

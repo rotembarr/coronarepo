@@ -1,0 +1,21 @@
+Info: Starting: Create HDL design files for synthesis
+Info: qsys-generate D:\USER\Documents\coronarepo\projects\memory_tests\qsys\single_port_ram.qsys --synthesis=VERILOG --output-directory=D:\USER\Documents\coronarepo\projects\memory_tests\qsys\single_port_ram\synthesis --family="Cyclone V" --part=5CSXFC6D6F31I7
+Progress: Loading qsys/single_port_ram.qsys
+Progress: Reading input file
+Progress: Adding clk_0 [clock_source 19.1]
+Progress: Parameterizing module clk_0
+Progress: Adding onchip_memory2_0 [altera_avalon_onchip_memory2 19.1]
+Progress: Parameterizing module onchip_memory2_0
+Progress: Building connections
+Progress: Parameterizing connections
+Progress: Validating
+Progress: Done reading input file
+Info: single_port_ram: Generating single_port_ram "single_port_ram" for QUARTUS_SYNTH
+Info: onchip_memory2_0: Starting RTL generation for module 'single_port_ram_onchip_memory2_0'
+Info: onchip_memory2_0:   Generation command is [exec C:/intelfpga_lite/19.1/quartus/bin64/perl/bin/perl.exe -I C:/intelfpga_lite/19.1/quartus/sopc_builder/bin/europa -I C:/intelfpga_lite/19.1/quartus/sopc_builder/bin -I C:/intelfpga_lite/19.1/quartus/../ip/altera/sopc_builder_ip/common -I C:/intelfpga_lite/19.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_onchip_memory2 -- C:/intelfpga_lite/19.1/quartus/../ip/altera/sopc_builder_ip/altera_avalon_onchip_memory2/generate_rtl.pl --name=single_port_ram_onchip_memory2_0 --dir=C:/Users/USER/AppData/Local/Temp/alt8534_4073204820763088892.dir/0012_onchip_memory2_0_gen/ --quartus_dir=C:/intelfpga_lite/19.1/quartus --verilog --config=C:/Users/USER/AppData/Local/Temp/alt8534_4073204820763088892.dir/0012_onchip_memory2_0_gen//single_port_ram_onchip_memory2_0_component_configuration.pl  --do_build_sim=0  ]
+Info: onchip_memory2_0: Done RTL generation for module 'single_port_ram_onchip_memory2_0'
+Info: onchip_memory2_0: "single_port_ram" instantiated altera_avalon_onchip_memory2 "onchip_memory2_0"
+Info: rst_controller: "single_port_ram" instantiated altera_reset_controller "rst_controller"
+Info: single_port_ram: Done "single_port_ram" with 3 modules, 5 files
+Info: qsys-generate succeeded.
+Info: Finished: Create HDL design files for synthesis
